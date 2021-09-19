@@ -1,0 +1,22 @@
+[[fblangref-security]]
+= Безопасность
+
+Базы данных, как и данные, хранимые в файлах базы данных, должны быть защищены.
+Firebird обеспечивает двухуровневую защиту данных -- аутентификация пользователя на уровне сервера и привилегии на уровне базы данных.
+В данной главе рассказывается, каким образом управлять безопасностью вашей базы данных на каждом из уровней.
+
+include::security/_fblangref-security-auth.adoc[leveloffset=+1]
+
+include::security/_fblangref-security-user.adoc[leveloffset=+1]
+
+include::security/_fblangref-security-privs.adoc[leveloffset=+1]
+
+include::security/_fblangref-security-role.adoc[leveloffset=+1]
+
+include::security/_fblangref-security-granting.adoc[leveloffset=+1]
+
+include::security/_fblangref-security-revoking.adoc[leveloffset=+1]
+
+include::security/_fblangref-security-mapping.adoc[leveloffset=+1]
+
+include::security/_fblangref-security-dbcrypt.adoc[leveloffset=+1]

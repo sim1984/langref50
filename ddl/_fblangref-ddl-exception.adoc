@@ -1,0 +1,303 @@
+[[fblangref-ddl-exception]]
+= EXCEPTION
+
+Пользовательское исключение (exception) -- объект базы данных, описывающий сообщение об ошибке.
+Исключение можно вызывать и обрабатывать в PSQL коде (см. <<fblangref-psql-statements-exception,EXCEPTION>>, <<fblangref-psql-statements-when,WHEN ... DO>>).
+
+В данном разделе описываются операторы создания, модификации и удаления исключений. 
+
+[[fblangref-ddl-exception-create]]
+== `CREATE EXCEPTION`
+
+.Назначение
+Создание пользовательского исключения для использования в PSQL модулях.
+(((CREATE EXCEPTION)))
+
+.Доступно в
+DSQL, ESQL
+
+[[fblangref-ddl-exception-create-syntax]]
+.Синтаксис
+[listing,subs="+quotes"]
+----
+CREATE EXCEPTION _exception_name_ '<message>'
+
+<message> ::= <message-part> [<message-part> ...]
+
+<message-part> ::=
+    <text>
+  | @<slot>
+
+<slot> ::= _one of 1..9_
+----
+
+[[fblangref-ddl-tbl-crtexcep]]
+.Параметры оператора `CREATE EXCEPTION`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|exception_name
+|Имя исключения.
+Максимальная длина 63 символов.
+
+|message
+|Сообщение об ошибке.
+Максимальная длина ограничена 1021 символом.
+
+|text
+|Текст.
+
+|slot
+|Номер слота для параметра.
+Нумерация начинается с 1.
+Максимальный номер слота равен 9.
+|===
+
+Оператор `CREATE EXCEPTION` создаёт новое пользовательское исключение для использования в PSQL модулях.
+Исключение должно отсутствовать в базе данных, иначе будет выдана соответствующая ошибка.
+
+Имя исключения является стандартным идентификатором.
+В диалекте 3 оно может быть заключено в двойные кавычки, что делает его чувствительным к регистру.
+Подробности см. <<fblangref-structure-identifiers,Идентификаторы>>.
+
+Сообщение исключения сохраняется в наборе символов `NONE`, т.е.
+любых символов из однобайтовых наборов символов.
+Текст сообщения может быть переопределён в PSQL коде во время возбуждения исключения.
+
+Сообщение об ошибке может содержать слоты для параметров, которые заполняются при возбуждении исключения. 
+
+.Внимание!
+[WARNING]
+====
+Если в тексте сообщения, встретится номер слота параметра больше 9, то второй и последующий символ будут восприняты как литералы.
+Например, @10 будет воспринято как @1, после которого следует литерал 0. 
+====
+
+[NOTE]
+====
+Пользовательские исключения хранятся в таблице <<fblangref-systables-exceptions,RDB$EXCEPTION>>.
+====
+
+[[fblangref-ddl-exception-create-who]]
+=== Кто может создать исключение?
+
+Выполнить оператор `CREATE EXCEPTION` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Пользователи с привилегией `CREATE EXCEPTION`.
+
+Пользователь, создавший исключение, становится его владельцем.
+
+[[fblangref-ddl-exception-create-examples]]
+=== Примеры
+
+.Создание пользовательского исключения
+[example]
+====
+[source,sql]
+----
+CREATE EXCEPTION E_LARGE_VALUE 'Значение превышает предельно допустимое';
+----
+====
+
+.Создание параметризованного исключения
+[example]
+====
+[source,sql]
+----
+CREATE EXCEPTION E_INVALID_VALUE 
+'Неверное значение @1 для поля @2';
+----
+====
+
+.См. также:
+<<fblangref-ddl-exception-alter,ALTER EXCEPTION>>,
+<<fblangref-ddl-exception-createoralter,CREATE OR ALTER EXCEPTION>>,
+<<fblangref-ddl-exception-drop,DROP EXCEPTION>>,
+<<fblangref-ddl-exception-recreate,RECREATE EXCEPTION>>,
+<<fblangref-psql-statements-exception,EXCEPTION>>.
+
+[[fblangref-ddl-exception-alter]]
+== `ALTER EXCEPTION`
+
+.Назначение
+Изменение текста сообщения пользовательского исключения.
+(((ALTER EXCEPTION)))
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+ALTER EXCEPTION _exception_name_ '<message>'
+
+Подробнее см. в синтаксисе <<fblangref-ddl-exception-create-syntax,`CREATE EXCEPTION`>>
+----
+
+Оператор `ALTER EXCEPTION` изменяет текст сообщения пользовательского исключения.
+
+[[fblangref-ddl-exception-alter_who]]
+=== Кто может изменить исключение?
+
+Выполнить оператор `ALTER EXCEPTION` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец исключения; 
+* Пользователи с привилегией `ALTER ANY EXCEPTION`.
+
+
+[[fblangref-ddl-exception-alter-examples]]
+=== Примеры
+
+.Изменение текста сообщения пользовательского исключения
+[example]
+====
+[source,sql]
+----
+ALTER EXCEPTION E_LARGE_VALUE 'Значение превышает максимально допустимое';
+----
+====
+
+.См. также:
+<<fblangref-ddl-exception-create,CREATE EXCEPTION>>,
+<<fblangref-ddl-exception-createoralter,CREATE OR ALTER EXCEPTION>>,
+<<fblangref-ddl-exception-recreate,RECREATE EXCEPTION>>.
+
+[[fblangref-ddl-exception-createoralter]]
+== `CREATE OR ALTER EXCEPTION`
+
+.Назначение
+Создание нового или изменение существующего исключения.
+(((CREATE OR ALTER EXCEPTION)))
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+CREATE OR ALTER EXCEPTION _exception_name_ '<message>'
+
+Подробнее см. в синтаксисе <<fblangref-ddl-exception-create-syntax,`CREATE EXCEPTION`>>
+----
+
+Если исключения не существует, то оно будет создано.
+Уже существующее исключение будет изменено, при этом существующие зависимости исключения будут сохранены. 
+
+[[fblangref-ddl-exception-createoralter-examples]]
+=== Примеры
+
+.Создание или изменение пользовательского исключения
+[example]
+====
+[source,sql]
+----
+CREATE OR ALTER EXCEPTION E_LARGE_VALUE 
+'Значение превышает максимально допустимое';
+----
+====
+
+.См. также:
+<<fblangref-ddl-exception-create,CREATE EXCEPTION>>,
+<<fblangref-ddl-exception-alter,ALTER EXCEPTION>>,
+<<fblangref-ddl-exception-recreate,RECREATE EXCEPTION>>.
+
+[[fblangref-ddl-exception-drop]]
+== `DROP EXCEPTION`
+
+.Назначение
+Удаление пользовательского исключения.
+(((DROP EXCEPTION)))
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+DROP EXCEPTION _exception_name_
+----
+
+[[fblangref-ddl-tbl-dropexcep]]
+.Параметры оператора `DROP EXCEPTION`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|exception_name
+|Имя исключения.
+|===
+
+Оператор `DROP EXCEPTION` удаляет пользовательское исключение.
+При наличии зависимостей для существующего исключения удаления не будет выполнено. 
+
+[[fblangref-ddl-exception-drop-who]]
+=== Кто может удалить исключение?
+
+Выполнить оператор `DROP EXCEPTION` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец исключения; 
+* Пользователи с привилегией `DROP ANY EXCEPTION`.
+
+
+[[fblangref-ddl-exception-drop-examples]]
+=== Примеры
+
+.Удаление пользовательского исключения
+[example]
+====
+[source,sql]
+----
+DROP EXCEPTION E_LARGE_VALUE;
+----
+====
+
+.См. также:
+<<fblangref-ddl-exception-create,CREATE EXCEPTION>>, <<fblangref-ddl-exception-recreate,RECREATE EXCEPTION>>. 
+
+[[fblangref-ddl-exception-recreate]]
+== `RECREATE EXCEPTION`
+
+.Назначение
+Создание или пересоздание пользовательского исключения.
+(((RECREATE EXCEPTION)))
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+RECREATE EXCEPTION _exception_name_ '<message>'
+
+Подробнее см. в синтаксисе <<fblangref-ddl-exception-create-syntax,`CREATE EXCEPTION`>>
+----
+
+
+Оператор `RECREATE EXCEPTION` создаёт или пересоздаёт пользовательское исключение.
+Если исключение с таким именем уже существует, то оператор `RECREATE EXCEPTION` попытается удалить его и создать новое исключение.
+При наличии зависимостей для существующего исключения оператор `RECREATE EXCEPTION` не выполнится.
+
+[[fblangref-ddl-exception-recreate-examples]]
+=== Примеры
+
+.Создание или пересоздание пользовательского исключения
+[example]
+====
+[source,sql]
+----
+RECREATE EXCEPTION E_LARGE_VALUE 
+'Значение превышает максимально допустимое';
+----
+====
+
+.См. также:
+<<fblangref-ddl-exception-create,CREATE EXCEPTION>>,
+<<fblangref-ddl-exception-alter,ALTER EXCEPTION>>,
+<<fblangref-ddl-exception-createoralter,CREATE OR ALTER EXCEPTION>>.
+
