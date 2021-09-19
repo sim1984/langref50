@@ -93,11 +93,11 @@ Language Reference for Firebird 5.0 Alpha
 документация. Вы можете получить самые свежие версии этого документа по адресам:
 
  
--   PDF (Asciidoc) —
-    [firebird-40-language-reference.pdf](https://github.com/sim1984/langref40/releases/download/langref40/firebird-40-language-reference.pdf)
+-   PDF —
+    [firebird-50-language-reference.pdf](https://github.com/sim1984/langref50/releases/download/1.0/firebird-50-language-reference.pdf)
 
--   HTML (Asciidoc) —
-    [firebird-40-language-reference-html.zip](https://github.com/sim1984/langref40/releases/download/langref40/firebird-40-language-reference-html.zip)
+-   HTML —
+    [firebird-50-language-reference-html.zip](https://github.com/sim1984/langref50/releases/download/1.0/firebird-50-language-reference-html.zip)
 
 
     
