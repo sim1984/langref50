@@ -3261,7 +3261,7 @@ SELECT LAST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
 .См. также:
 <<fblangref-scalarfuncs-firstday>>.
 
-[[fblangref-functions-decfloat]]
+[[fblangref-functions-blob]]
 == Функции для работы с типом BLOB
 
 [[fblangref-scalarfuncs-blobappend]]
