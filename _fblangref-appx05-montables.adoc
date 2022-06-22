@@ -336,7 +336,7 @@ WHERE STMT.MON$ATTACHMENT_ID <> CURRENT_CONNECTION
 [[fblangref-montables-compiled-statements]]
 == `MON$COMPILED_STATEMENTS`
 
-Подготовленные SQL операторы.
+Скомпилированные SQL операторы.
 
 .Описание столбцов таблицы `MON$COMPILED_STATEMENTS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
@@ -347,7 +347,7 @@ WHERE STMT.MON$ATTACHMENT_ID <> CURRENT_CONNECTION
 
 |MON$COMPILED_STATEMENT_ID
 |BIGINT
-|Идентификатор подготовленного запроса.
+|Идентификатор скомпилированного запроса.
 
 |MON$SQL_TEXT
 |BLOB TEXT
@@ -861,7 +861,7 @@ FETCH FIRST 10 ROWS ONLY
 
 |MON$COMPILED_STATEMENT_ID
 |BIGINT
-|Идентификатор подготовленного запроса.
+|Идентификатор скомпилированного запроса.
 |===
 
 Состояние оператора `STALLED` -- это состояние "`приостановлено`". Возможно для запроса, который начал своё выполнение, ещё не завершил его, но в данный момент не выполняется.
