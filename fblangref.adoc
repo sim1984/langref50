@@ -1,7 +1,7 @@
 [[fblangref]]
 = Руководство по языку SQL СУБД Firebird 5.0 Alpha
 Дмитрий Филиппов; Александр Карпейкин; Алексей Ковязин; Дмитрий Кузьменко; Денис Симонов; Paul Vinkenoog; Дмитрий Еманов; Mark Rotteveel
-0.13, от 21.10.2022
+0.14, от 21.10.2022
 
 Авторские права (C) 2017-2022 Firebird Project и всех участвующих авторов на https://www.firebirdsql.org/manual/pdl.html[Public Documentation License Version 1.0].
 Пожалуйста, обратитесь к <<fblangref-license,License Notice in the Appendix>>
@@ -27,6 +27,8 @@ include::_fblangref-functions-scalar.adoc[leveloffset=1]
 include::_fblangref-functions-aggregate.adoc[leveloffset=1]
 
 include::_fblangref-functions-window.adoc[leveloffset=1]
+
+include::_fblangref-build-in-packages.adoc[leveloffset=1]
 
 include::_fblangref-context-var.adoc[leveloffset=1]
 
