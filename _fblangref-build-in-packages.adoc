@@ -411,23 +411,23 @@ select pstat.*
 - `PROFILE_ID` type `BIGINT` - идентификатор сессии профилирования
 - `REQUEST_ID` type `BIGINT` - идентификатор запроса
 - `STATEMENT_ID` type `BIGINT` - идентификатор оператора
-- `CALLER_REQUEST_ID` type `BIGINT` - Caller request ID
-- `START_TIMESTAMP` type `TIMESTAMP WITH TIME ZONE` - Moment this request was first gathered profile data
-- `FINISH_TIMESTAMP` type `TIMESTAMP WITH TIME ZONE` - Moment this request was finished
-- `TOTAL_ELAPSED_TIME` type `BIGINT` - Accumulated elapsed time (in nanoseconds) of the request
+- `CALLER_REQUEST_ID` type `BIGINT` - идентификатор вызывающего запроса
+- `START_TIMESTAMP` type `TIMESTAMP WITH TIME ZONE` - момент, когда данный запрос впервые собрал данные профилирования
+- `FINISH_TIMESTAMP` type `TIMESTAMP WITH TIME ZONE` - момент завершения запроса
+- `TOTAL_ELAPSED_TIME` type `BIGINT` - Накопленное время выполнения запроса (в наносекундах)
 - Первичный ключ: `PROFILE_ID, REQUEST_ID`
 
 ==== Таблица `PLG$PROF_PSQL_STATS`
 
 - `PROFILE_ID` type `BIGINT` - идентификатор сессии профилирования
 - `REQUEST_ID` type `BIGINT` - идентификатор запроса
-- `LINE_NUM` type `INTEGER` - Line number of the statement
-- `COLUMN_NUM` type `INTEGER` - Column number of the statement
+- `LINE_NUM` type `INTEGER` - номер строки оператора
+- `COLUMN_NUM` type `INTEGER` - номер столбца оператора
 - `STATEMENT_ID` type `BIGINT` - идентификатор оператора
-- `COUNTER` type `BIGINT` - Number of executed times of the line/column
-- `MIN_ELAPSED_TIME` type `BIGINT` - Minimal elapsed time (in nanoseconds) of a line/column execution
-- `MAX_ELAPSED_TIME` type `BIGINT` - Maximum elapsed time (in nanoseconds) of a line/column execution
-- `TOTAL_ELAPSED_TIME` type `BIGINT` - Accumulated elapsed time (in nanoseconds) of the line/column executions
+- `COUNTER` type `BIGINT` - количество выполнений для номера строки/столбца
+- `MIN_ELAPSED_TIME` type `BIGINT` - Минимальное время выполнения (в наносекундах) для строки/столбца
+- `MAX_ELAPSED_TIME` type `BIGINT` - Максимальное время выполнения (в наносекундах) для строки/столбца
+- `TOTAL_ELAPSED_TIME` type `BIGINT` - Накопленное время выполнения (в наносекундах) для строки/столбца
 - Первичный ключ: `PROFILE_ID, REQUEST_ID, LINE_NUM, COLUMN_NUM`
 
 ==== Таблица `PLG$PROF_RECORD_SOURCE_STATS`
@@ -437,12 +437,164 @@ select pstat.*
 - `CURSOR_ID` type `BIGINT` - идентификатор курсора
 - `RECORD_SOURCE_ID` type `BIGINT` - идентификатор источника записи
 - `STATEMENT_ID` type `BIGINT` - идентификатор оператора
-- `OPEN_COUNTER` type `BIGINT` - Number of open times of the record source
-- `OPEN_MIN_ELAPSED_TIME` type `BIGINT` - Minimal elapsed time (in nanoseconds) of a record source open
-- `OPEN_MAX_ELAPSED_TIME` type `BIGINT` - Maximum elapsed time (in nanoseconds) of a record source open
-- `OPEN_TOTAL_ELAPSED_TIME` type `BIGINT` - Accumulated elapsed time (in nanoseconds) of the record source openings
-- `FETCH_COUNTER` type `BIGINT` - Number of fetch times of the record source
-- `FETCH_MIN_ELAPSED_TIME` type `BIGINT` - Minimal elapsed time (in nanoseconds) of a record source fetch
-- `FETCH_MAX_ELAPSED_TIME` type `BIGINT` - Maximum elapsed time (in nanoseconds) of a record source fetch
-- `FETCH_TOTAL_ELAPSED_TIME` type `BIGINT` - Accumulated elapsed time (in nanoseconds) of the record source fetches
+- `OPEN_COUNTER` type `BIGINT` - количество открытий источника записи
+- `OPEN_MIN_ELAPSED_TIME` type `BIGINT` - Минимальное время открытия источника записи (в наносекундах)
+- `OPEN_MAX_ELAPSED_TIME` type `BIGINT` - Максимальное время открытия источника записи (в наносекундах)
+- `OPEN_TOTAL_ELAPSED_TIME` type `BIGINT` - Накопленное время открытия источника записи (в наносекундах)
+- `FETCH_COUNTER` type `BIGINT` - Количество извлечений из источника записи
+- `FETCH_MIN_ELAPSED_TIME` type `BIGINT` - Минимальное время извлечения записи из источника записи (в наносекундах)
+- `FETCH_MAX_ELAPSED_TIME` type `BIGINT` - Максимальное время извлечения записи из источника записи (в наносекундах)
+- `FETCH_TOTAL_ELAPSED_TIME` type `BIGINT` - Накопленное время извлечения записей из источника записи (в наносекундах)
 - Первичный ключ: `PROFILE_ID, REQUEST_ID, CURSOR_ID, RECORD_SOURCE_ID`
+
+=== Вспомогательные представления
+
+Эти представления помогают извлекать данные профилирования, агрегированные на уровне операторов.
+
+Они должны быть предпочтительным способом анализа собранных данных.
+Их также можно использовать вместе с таблицами для получения дополнительных данных, отсутствующих в представлениях.
+
+После того как горячие точки найдены, можно детализировать данные на уровне запроса через таблицы.
+
+==== Представление `PLG$PROF_STATEMENT_STATS_VIEW`
+
+[source,sql]
+----
+select req.profile_id,
+       req.statement_id,
+       sta.statement_type,
+       sta.package_name,
+       sta.routine_name,
+       sta.parent_statement_id,
+       sta_parent.statement_type parent_statement_type,
+       sta_parent.routine_name parent_routine_name,
+       (select sql_text
+          from plg$prof_statements
+          where profile_id = req.profile_id and
+                statement_id = coalesce(sta.parent_statement_id, req.statement_id)
+       ) sql_text,
+       count(*) counter,
+       min(req.total_elapsed_time) min_elapsed_time,
+       max(req.total_elapsed_time) max_elapsed_time,
+       cast(sum(req.total_elapsed_time) as bigint) total_elapsed_time,
+       cast(sum(req.total_elapsed_time) / count(*) as bigint) avg_elapsed_time
+  from plg$prof_requests req
+  join plg$prof_statements sta
+    on sta.profile_id = req.profile_id and
+       sta.statement_id = req.statement_id
+  left join plg$prof_statements sta_parent
+    on sta_parent.profile_id = sta.profile_id and
+       sta_parent.statement_id = sta.parent_statement_id
+  group by req.profile_id,
+           req.statement_id,
+           sta.statement_type,
+           sta.package_name,
+           sta.routine_name,
+           sta.parent_statement_id,
+           sta_parent.statement_type,
+           sta_parent.routine_name
+  order by sum(req.total_elapsed_time) desc
+----
+
+==== Представление `PLG$PROF_PSQL_STATS_VIEW`
+
+[source,sql]
+----
+select pstat.profile_id,
+       pstat.statement_id,
+       sta.statement_type,
+       sta.package_name,
+       sta.routine_name,
+       sta.parent_statement_id,
+       sta_parent.statement_type parent_statement_type,
+       sta_parent.routine_name parent_routine_name,
+       (select sql_text
+          from plg$prof_statements
+          where profile_id = pstat.profile_id and
+                statement_id = coalesce(sta.parent_statement_id, pstat.statement_id)
+       ) sql_text,
+       pstat.line_num,
+       pstat.column_num,
+       cast(sum(pstat.counter) as bigint) counter,
+       min(pstat.min_elapsed_time) min_elapsed_time,
+       max(pstat.max_elapsed_time) max_elapsed_time,
+       cast(sum(pstat.total_elapsed_time) as bigint) total_elapsed_time,
+       cast(sum(pstat.total_elapsed_time) / nullif(sum(pstat.counter), 0) as bigint) avg_elapsed_time
+  from plg$prof_psql_stats pstat
+  join plg$prof_statements sta
+    on sta.profile_id = pstat.profile_id and
+       sta.statement_id = pstat.statement_id
+  left join plg$prof_statements sta_parent
+    on sta_parent.profile_id = sta.profile_id and
+       sta_parent.statement_id = sta.parent_statement_id
+  group by pstat.profile_id,
+           pstat.statement_id,
+           sta.statement_type,
+           sta.package_name,
+           sta.routine_name,
+           sta.parent_statement_id,
+           sta_parent.statement_type,
+           sta_parent.routine_name,
+           pstat.line_num,
+           pstat.column_num
+  order by sum(pstat.total_elapsed_time) desc
+----
+
+==== Представление `PLG$PROF_RECORD_SOURCE_STATS_VIEW`
+
+[source,sql]
+----
+select rstat.profile_id,
+       rstat.statement_id,
+       sta.statement_type,
+       sta.package_name,
+       sta.routine_name,
+       sta.parent_statement_id,
+       sta_parent.statement_type parent_statement_type,
+       sta_parent.routine_name parent_routine_name,
+       (select sql_text
+          from plg$prof_statements
+          where profile_id = rstat.profile_id and
+                statement_id = coalesce(sta.parent_statement_id, rstat.statement_id)
+       ) sql_text,
+       rstat.cursor_id,
+       rstat.record_source_id,
+       recsrc.parent_record_source_id,
+       recsrc.access_path,
+       cast(sum(rstat.open_counter) as bigint) open_counter,
+       min(rstat.open_min_elapsed_time) open_min_elapsed_time,
+       max(rstat.open_max_elapsed_time) open_max_elapsed_time,
+       cast(sum(rstat.open_total_elapsed_time) as bigint) open_total_elapsed_time,
+       cast(sum(rstat.open_total_elapsed_time) / nullif(sum(rstat.open_counter), 0) as bigint) open_avg_elapsed_time,
+       cast(sum(rstat.fetch_counter) as bigint) fetch_counter,
+       min(rstat.fetch_min_elapsed_time) fetch_min_elapsed_time,
+       max(rstat.fetch_max_elapsed_time) fetch_max_elapsed_time,
+       cast(sum(rstat.fetch_total_elapsed_time) as bigint) fetch_total_elapsed_time,
+       cast(sum(rstat.fetch_total_elapsed_time) / nullif(sum(rstat.fetch_counter), 0) as bigint) fetch_avg_elapsed_time,
+       cast(coalesce(sum(rstat.open_total_elapsed_time), 0) + coalesce(sum(rstat.fetch_total_elapsed_time), 0) as bigint) open_fetch_total_elapsed_time
+  from plg$prof_record_source_stats rstat
+  join plg$prof_record_sources recsrc
+    on recsrc.profile_id = rstat.profile_id and
+       recsrc.statement_id = rstat.statement_id and
+       recsrc.cursor_id = rstat.cursor_id and
+       recsrc.record_source_id = rstat.record_source_id
+  join plg$prof_statements sta
+    on sta.profile_id = rstat.profile_id and
+       sta.statement_id = rstat.statement_id
+  left join plg$prof_statements sta_parent
+    on sta_parent.profile_id = sta.profile_id and
+       sta_parent.statement_id = sta.parent_statement_id
+  group by rstat.profile_id,
+           rstat.statement_id,
+           sta.statement_type,
+           sta.package_name,
+           sta.routine_name,
+           sta.parent_statement_id,
+           sta_parent.statement_type,
+           sta_parent.routine_name,
+           rstat.cursor_id,
+           rstat.record_source_id,
+           recsrc.parent_record_source_id,
+           recsrc.access_path
+  order by coalesce(sum(rstat.open_total_elapsed_time), 0) + coalesce(sum(rstat.fetch_total_elapsed_time), 0) desc
+----
