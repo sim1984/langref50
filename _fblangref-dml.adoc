@@ -33,7 +33,7 @@ FROM
      [FETCH {FIRST | NEXT} [m] {ROW | ROWS} ONLY]}
 ]   
 [FOR UPDATE [OF <columns>]]   
-[WITH LOCK]   
+[WITH LOCK [SKIP LOCKED]]
 [INTO <variables>]                    
 
 <variables> ::= [:]_varname_ [, [:]_varname_ ...]
@@ -3425,7 +3425,7 @@ SELECT ...
 FROM _single_table_
 [WHERE ...] 
 [FOR UPDATE [OF <column-names>]] 
-WITH LOCK
+WITH LOCK [SKIP LOCKED]
 ----
 
 Опция `WITH LOCK`, обеспечивает возможность ограниченной явной пессимистической блокировки для осторожного использования в затронутых наборах строк:
@@ -3491,6 +3491,28 @@ WITH LOCK
 
 Для этого режима TPB никогда не возникает конфликта обновления.
 |===
+
+[[fblangref-dml-select-with-lock-skip-locked]]
+==== `SKIP LOCKED`
+
+.Назначение
+Пропустить заблокированное.
+(((SELECT, WITH LOCK, SKIP LOCKED)))
+
+Предложение `SKIP LOCKED`  заставляет движок пропускать записи, заблокированные другими транзакциями,
+вместо того, чтобы ждать или вызывать ошибки при конфликте.
+
+Такая функциональность полезна для реализации рабочих очередей, когда один или несколько процессов отправляют
+данные в таблицу и выдают событие, в то время как рабочие процессы прослушивают эти события и читают/удаляют элементы из таблицы.
+Используя `SKIP LOCKED`, несколько рабочих потоков могут получать эксклюзивные рабочие элементы из таблицы без конфликтов.
+
+[NOTE]
+====
+Если указаны предложения FIRST/SKIP/ROWS/OFFSET/FETCH, то блокировка записей (и "пропуск блокировок") выполняется между пропуском (SKIP/ROWS/OFFSET/FETCH) и ограничением (FIRST/ROWS/OFFSET/FETCH).
+====
+
+См. также: <<fblangref-dml-update-skip-locked,`UPDATE ... SKIP LOCKED`>>,
+<<fblangref-dml-delete-skip-locked,`DELETE FROM ... SKIP LOCKED`>>.
 
 [[fblangref-dml-select-with-lock_for-update]]
 ==== Использование предложения `FOR UPDATE`
@@ -4244,6 +4266,7 @@ UPDATE _target_ [[AS] _alias_]
   [PLAN <plan_items>]
   [ORDER BY <sort_items>]
   [ROWS _m_ [TO _n_]]
+  [SKIP LOCKED]
   [RETURNING <returning_list> [INTO <variables>]]
 
 <upd_value> ::= <value_expression> | DEFAULT
@@ -4541,6 +4564,27 @@ ROWS 20;
 ----
 ====
 
+[[fblangref-dml-update-skip-locked]]
+=== `SKIP LOCKED`
+
+.Назначение
+Пропустить заблокированное.
+(((UPDATE, SKIP LOCKED)))
+
+Предложение `SKIP LOCKED`  заставляет движок пропускать записи, заблокированные другими транзакциями,
+вместо того, чтобы ждать или вызывать ошибки при конфликте.
+
+Такая функциональность полезна для реализации рабочих очередей, когда один или несколько процессов отправляют
+данные в таблицу и выдают событие, в то время как рабочие процессы прослушивают эти события и читают/удаляют элементы из таблицы.
+Используя `SKIP LOCKED`, несколько рабочих потоков могут получать эксклюзивные рабочие элементы из таблицы без конфликтов.
+
+[NOTE]
+====
+Если указаны предложения FIRST/SKIP/ROWS/OFFSET/FETCH, то блокировка записей (и "пропуск блокировок") выполняется между пропуском (SKIP/ROWS/OFFSET/FETCH) и ограничением (FIRST/ROWS/OFFSET/FETCH).
+====
+
+См. также: <<fblangref-dml-select-with-lock-skip-locked,`SELECT ... SKIP LOCKED`>>,
+<<fblangref-dml-delete-skip-locked,`DELETE FROM ... SKIP LOCKED`>>.
 
 [[fblangref-dml-update-returning]]
 === `RETURNING`
@@ -4793,6 +4837,7 @@ DELETE
   [PLAN <plan_items>]
   [ORDER BY <sort_items>]
   [ROWS _m_ [TO _n_]]
+  [SKIP LOCKED]
   [RETURNING <returning_list> [INTO <variables>]]
 
 <returning_list> ::= * | <output_column> [, <output_column]
@@ -5009,6 +5054,74 @@ DELETE FROM popgroups ORDER BY formed ROWS 5
 ----
 DELETE FROM popgroups ROWS 5 TO 12
 ----
+====
+
+[[fblangref-dml-delete-skip-locked]]
+=== `SKIP LOCKED`
+
+.Назначение
+Пропустить заблокированное.
+(((DELETE, SKIP LOCKED)))
+
+Предложение `SKIP LOCKED`  заставляет движок пропускать записи, заблокированные другими транзакциями,
+вместо того, чтобы ждать или вызывать ошибки при конфликте.
+
+Такая функциональность полезна для реализации рабочих очередей, когда один или несколько процессов отправляют
+данные в таблицу и выдают событие, в то время как рабочие процессы прослушивают эти события и читают/удаляют элементы из таблицы.
+Используя `SKIP LOCKED`, несколько рабочих потоков могут получать эксклюзивные рабочие элементы из таблицы без конфликтов.
+
+[NOTE]
+====
+Если указаны предложения FIRST/SKIP/ROWS/OFFSET/FETCH, то блокировка записей (и "пропуск блокировок") выполняется между пропуском (SKIP/ROWS/OFFSET/FETCH) и ограничением (FIRST/ROWS/OFFSET/FETCH).
+====
+
+См. также: <<fblangref-dml-select-with-lock-skip-locked,`SELECT ... SKIP LOCKED`>>,
+<<fblangref-dml-update-skip-locked,`UPDATE ... SKIP LOCKED`>>.
+
+.Использование предложения `SKIP LOCKED` для организации очереди
+[example]
+====
+Подготовка метаданных.
+
+[source,sql]
+----
+create table emails_queue (
+    subject varchar(60) not null,
+    text blob sub_type text not null
+);
+
+set term !;
+
+create trigger emails_queue_ins after insert on emails_queue
+as
+begin
+    post_event('EMAILS_QUEUE');
+end!
+
+set term ;!
+----
+
+Отправка данных приложением или подпрограммой
+
+[source,sql]
+----
+insert into emails_queue (subject, text)
+  values ('E-mail subject', 'E-mail text...');
+commit;
+----
+
+Клиентское приложение может прослушивать событие `EMAILS_QUEUE`, чтобы отправлять электронные письма, используя этот запрос:
+
+[source,sql]
+----
+delete from emails_queue
+  rows 10
+  skip locked
+  returning subject, text;
+----
+
+Может быть запущено более одного экземпляра приложения, например, для балансировки нагрузки.
+
 ====
 
 
