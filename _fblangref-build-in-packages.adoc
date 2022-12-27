@@ -1,6 +1,309 @@
 [[fblangref-build-in-packages]]
 = Встроенные пакеты
 
+[[fblangref-build-in-package-blob-util-pkg]]
+== Пакет `RDB$BLOB_UTIL`
+
+(((RDB$BLOB_UTIL)))
+Пакет `RDB$BLOB_UTIL` предназначен для управления BLOB-объектами так, как это не могут сделать стандартные функции Firebird,
+такие как `BLOB_APPEND` и `SUBSTRING`, или они работают очень медленно.
+
+Эти подпрограммы работают с двоичными данными напрямую, даже с текстовыми BLOB.
+
+=== Функция `RDB$BLOB_UTIL.NEW_BLOB`
+
+Функция `RDB$BLOB_UTIL.NEW_BLOB` используется для создания нового BLOB. Он возвращает BLOB, подходящий для добавления данных, как это делает `BLOB_APPEND`.
+
+Преимущество по сравнению с `BLOB_APPEND` заключается в том, что можно установить собственные параметры `SEGMENTED` и `TEMP_STORAGE`.
+
+Функция `BLOB_APPEND` всегда создает BLOB во временном хранилище. Это может быть не лучшим подходом,
+если созданный BLOB будет храниться в постоянной таблице, поскольку для этого потребуется копирование.
+
+Возвращенный BLOB из этой функции, даже если `TEMP_STORAGE = FALSE`, может использоваться с `BLOB_APPEND` для добавления данных.
+
+.Входные параметры функции `RDB$BLOB_UTIL.NEW_BLOB`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Параметр
+^| Тип
+^| Описание
+
+|SEGMENTED
+|`BOOLEAN NOT NULL`
+|Тип BLOB. Если TRUE - будет создан сегментированный BLOB, FALSE - потоковый.
+
+|TEMP_STORAGE
+|`BOOLEAN NOT NULL`
+|В каком хранилище создаётся BLOB. TRUE - во временном, FALSE - в постоянном (для записи в обычную таблицу).
+|===
+
+.Тип возвращаемого результата
+`BLOB SUB_TYPE BINARY`
+
+=== Функция `RDB$BLOB_UTIL.OPEN_BLOB`
+
+Функция `RDB$BLOB_UTIL.OPEN_BLOB` используется для открытия существующего BLOB для чтения.
+Она возвращает дескриптор (целое число, связанное с транзакцией), подходящий для использования с другими функциями этого пакета,
+такими как `SEEK`, `READ_DATA` и `CLOSE_HANDLE`.
+
+.Входные параметры функции `RDB$BLOB_UTIL.OPEN_BLOB`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Параметр
+^| Тип
+^| Описание
+
+|BLOB
+|`BLOB NOT NULL`
+|Входной BLOB.
+|===
+
+.Тип возвращаемого результата
+`INTEGER`
+
+=== Функция `RDB$BLOB_UTIL.IS_WRITABLE`
+
+Функция `RDB$BLOB_UTIL.IS_WRITABLE` возвращает `TRUE`, если BLOB подходит для добавления данных без копирования с использованием `BLOB_APPEND`.
+
+.Входные параметры функции `RDB$BLOB_UTIL.IS_WRITABLE`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Параметр
+^| Тип
+^| Описание
+
+|BLOB
+|`BLOB NOT NULL`
+|Проверяемый BLOB.
+|===
+
+.Тип возвращаемого результата
+`BOOLEAN`
+
+=== Функция `RDB$BLOB_UTIL.READ_DATA`
+
+Функция `RDB$BLOB_UTIL.READ_DATA` используется для чтения фрагментов данных из дескриптора BLOB,
+открытого с помощью `RDB$BLOB_UTIL.OPEN_BLOB`. Когда BLOB полностью прочитан и данных больше нет, она возвращает `NULL`.
+
+Если в `LENGTH` передается положительное число, то возвращается `VARBINARY` максимальной длины `LENGTH`.
+
+Если в `LENGTH` передается `NULL`, то возвращается только сегмент BLOB с максимальной длиной 32765.
+
+.Входные параметры функции `RDB$BLOB_UTIL.READ_DATA`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Параметр
+^| Тип
+^| Описание
+
+|HANDLE
+|`INTEGER NOT NULL`
+|Дескриптор открытого BLOB.
+
+|LENGTH
+|`INTEGER`
+|Количество байт, которое необходимо прочитать.
+|===
+
+.Тип возвращаемого результата
+`VARBINARY(32765)`
+
+=== Функция `RDB$BLOB_UTIL.SEEK`
+
+Функция `RDB$BLOB_UTIL.SEEK` используется для установки позиции для следующего `READ_DATA`. Она возвращает новую позицию.
+
+Параметр `MODE` может быть 0 (с начала), 1 (с текущей позиции) или 2 (с конца).
+
+Когда параметр `MODE` равен 2, `OFFSET` должен быть нулевым или отрицательным.
+
+.Входные параметры функции `RDB$BLOB_UTIL.SEEK`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Параметр
+^| Тип
+^| Описание
+
+|HANDLE
+|`INTEGER NOT NULL`
+|Дескриптор открытого BLOB.
+
+|MODE
+|`INTEGER NOT NULL`
+|Режим поиска.
+
+|OFFSET
+|`INTEGER NOT NULL`
+|Смещение, байт.
+|===
+
+.Тип возвращаемого результата
+`INTEGER`
+
+=== Процедура `RDB$BLOB_UTIL.CANCEL_BLOB`
+
+Процедура `RDB$BLOB_UTIL.CANCEL_BLOB` используется для немедленного освобождения временного BLOB-объекта, например созданного с помощью `BLOB_APPEND`.
+
+Обратите внимание, что если тот же BLOB используется после отмены, с использованием той же переменной или другой с той же ссылкой на идентификатор BLOB,
+то будет вызвана ошибка "invalid blob id error".
+
+.Входные параметры процедуры `RDB$BLOB_UTIL.CANCEL_BLOB`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Параметр
+^| Тип
+^| Описание
+
+|BLOB
+|`BLOB NOT NULL`
+|BLOB для отмены.
+|===
+
+=== Процедура `RDB$BLOB_UTIL.CLOSE_HANDLE`
+
+Процедура `RDB$BLOB_UTIL.CLOSE_HANDLE` используется для закрытия дескриптора BLOB, открытого с помощью `RDB$BLOB_UTIL.OPEN_BLOB`.
+
+Незакрытые дескрипторы закрываются автоматически только при завершении транзакции.
+
+.Входные параметры процедуры `RDB$BLOB_UTIL.CLOSE_HANDLE`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Параметр
+^| Тип
+^| Описание
+
+|HANDLE
+|`INTEGER NOT NULL`
+|Дескриптор BLOB для закрытия.
+|===
+
+=== Примеры использования `RDB$BLOB_UTIL`
+
+.Создание BLOB во временном пространстве и возврат его в EXECUTE BLOCK
+[example]
+====
+[source,sql]
+----
+execute block returns (b blob)
+as
+begin
+    -- Create a BLOB handle in the temporary space.
+    b = rdb$blob_util.new_blob(false, true);
+
+    -- Add chunks of data.
+    b = blob_append(b, '12345');
+    b = blob_append(b, '67');
+
+    suspend;
+end
+----
+====
+
+.Открытие BLOB и его возврат по частям в EXECUTE BLOCK
+[example]
+====
+[source,sql]
+----
+execute block returns (s varchar(10))
+as
+    declare b blob = '1234567';
+    declare bhandle integer;
+begin
+    -- Open the BLOB and get a BLOB handle.
+    bhandle = rdb$blob_util.open_blob(b);
+
+    -- Get chunks of data as string and return.
+
+    s = rdb$blob_util.read_data(bhandle, 3);
+    suspend;
+
+    s = rdb$blob_util.read_data(bhandle, 3);
+    suspend;
+
+    s = rdb$blob_util.read_data(bhandle, 3);
+    suspend;
+
+    -- Here EOF is found, so it returns NULL.
+    s = rdb$blob_util.read_data(bhandle, 3);
+    suspend;
+
+    -- Close the BLOB handle.
+    execute procedure rdb$blob_util.close_handle(bhandle);
+end
+----
+====
+
+.Поиск в BLOB
+[example]
+====
+[source,sql]
+----
+set term !;
+
+execute block returns (s varchar(10))
+as
+    declare b blob;
+    declare bhandle integer;
+begin
+    -- Create a stream BLOB handle.
+    b = rdb$blob_util.new_blob(false, true);
+
+    -- Add data.
+    b = blob_append(b, '0123456789');
+
+    -- Open the BLOB.
+    bhandle = rdb$blob_util.open_blob(b);
+
+    -- Seek to 5 since the start.
+    rdb$blob_util.seek(bhandle, 0, 5);
+    s = rdb$blob_util.read_data(bhandle, 3);
+    suspend;
+
+    -- Seek to 2 since the start.
+    rdb$blob_util.seek(bhandle, 0, 2);
+    s = rdb$blob_util.read_data(bhandle, 3);
+    suspend;
+
+    -- Advance 2.
+    rdb$blob_util.seek(bhandle, 1, 2);
+    s = rdb$blob_util.read_data(bhandle, 3);
+    suspend;
+
+    -- Seek to -1 since the end.
+    rdb$blob_util.seek(bhandle, 2, -1);
+    s = rdb$blob_util.read_data(bhandle, 3);
+    suspend;
+end!
+
+set term ;!
+----
+====
+
+.Поверка доступен ли BLOB для записи
+[example]
+====
+[source,sql]
+----
+create table t(b blob);
+
+set term !;
+
+execute block returns (bool boolean)
+as
+    declare b blob;
+begin
+    b = blob_append(null, 'writable');
+    bool = rdb$blob_util.is_writable(b);
+    suspend;
+
+    insert into t (b) values ('not writable') returning b into b;
+    bool = rdb$blob_util.is_writable(b);
+    suspend;
+end!
+
+set term ;!
+----
+====
+
 [[fblangref-build-in-packages-time-zone-util-pkg]]
 == Пакет `RDB$TIME_ZONE_UTIL`
 
