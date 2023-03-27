@@ -153,6 +153,9 @@ CREATE ROLE _rolename_
 `REPLICATE_INTO_DATABASE`::
 Использование API репликации для загрузки наборов изменений в базу данных.
 
+`PROFILE_ANY_ATTACHMENT`::
+Профилирование любого соединения.
+
 
 Для проверки имеет ли текущее подключение заданную системную привилегию можно воспользоваться встроенной функцией
 <<fblangref-scalarfuncs-system-privelege,`RDB$SYSTEM_PRIVILEGE()`>>.

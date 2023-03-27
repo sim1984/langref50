@@ -42,7 +42,8 @@ COMMENT ON <object> IS {'_sometext_' | NULL}
   | SEQUENCE 
   | TABLE 
   | TRIGGER 
-  | VIEW    
+  | VIEW
+  | MAPPING
   
 ----
 
