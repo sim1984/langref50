@@ -146,7 +146,7 @@ select pstat.*
            pstat.record_source_id;
 ----
 
-[[fblangref-build-in-package-profiler-pkg]]
+[[fblangref-appx-profiler-pkg]]
 == Пакет `RDB$PROFILER`
 
 === Функция `START_SESSION`
