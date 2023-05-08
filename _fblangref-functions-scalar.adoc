@@ -136,6 +136,9 @@ GUID базы данных.
 Протокол, используемый для соединения с базой данных.
 Возможные значения: `'TCPv4'`, `'TCPv6'`, `'WNET'`, `'XNET'`, `NULL`.
 
+`PARALLEL_WORKERS`::
+Максимальное количество параллельных рабочих процессов в текущем подключении.
+
 `READ_ONLY`::
 Отображает, является ли транзакция, транзакцией только для
 чтения. `'FALSE'` для Read-Write транзакций `'TRUE'` для Read Only.
@@ -151,7 +154,7 @@ GUID базы данных.
 `SESSION_ID`::
 Глобальная переменная `CURRENT_CONNECTION`.
 
-SESSION_IDLE_TIMEOUT`::
+`SESSION_IDLE_TIMEOUT`::
 Содержит текущее значение тайм-аут простоя соединения в
 секундах, который был установлен на уровне соединения, или ноль,
 если тайм-аут не был установлен.
@@ -3037,7 +3040,7 @@ DSQL, PSQL
 EXTRACT (<part> FROM <datetime>)
                             
 <part> ::= 
-    YEAR | MONTH | WEEK | DAY | WEEKDAY | YEARDAY
+    YEAR | QUARTER | MONTH | WEEK | DAY | WEEKDAY | YEARDAY
   | HOUR | MINUTE | SECOND | MILLISECOND
   | TIMEZONE_HOUR | TIMEZONE_MINUTE
 ----
@@ -3074,6 +3077,11 @@ EXTRACT (<part> FROM <datetime>)
 |SMALLINT 
 |1–9999 
 |Год
+
+|QUARTER
+|SMALLINT
+|1-4
+|Квартал
 
 |MONTH 
 |SMALLINT 
@@ -3167,7 +3175,7 @@ DSQL, PSQL
 ----
 FIRST_DAY(OF <period> FROM _date_or_timestamp_)
 
-<period> ::= YEAR | MONTH | WEEK
+<period> ::= YEAR | QUARTER | MONTH | WEEK
 ----
 
 .Параметры функции `FIRST_DAY`
@@ -3220,7 +3228,7 @@ DSQL, PSQL
 ----
 LAST_DAY(OF <period> FROM _date_or_timestamp_)
                             
-<period> ::=  YEAR | MONTH | WEEK
+<period> ::=  YEAR | QUARTER | MONTH | WEEK
 ----
 
 .Параметры функции `LAST_DAY`
