@@ -765,16 +765,16 @@ FETCH FIRST 10 ROWS ONLY
 
 |MON$RECORD_BACKOUTS 
 |BIGINT 
-|Количество возвращённых в базу данных записей (backed out
-                                records). 
+|Количество удалений версий записей созданных при rollback (backed out records).
 
 |MON$RECORD_PURGES 
 |BIGINT 
-|Количество удалённых ненужных записей (purged records). 
+|Количество удалений старых версий записей (purged records).
 
 |MON$RECORD_EXPUNGES 
 |BIGINT 
-|Количество вычищенных средствами сборки мусора записей (expunged records).
+|Количество удалений всей цепочки версий записи, если самая последняя версия удалена, и не нужна
+другим транзакциям (expunged records).
 
 |MON$RECORD_LOCKS 
 |BIGINT 
