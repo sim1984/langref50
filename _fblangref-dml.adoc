@@ -34,6 +34,7 @@ FROM
 ]   
 [FOR UPDATE [OF <columns>]]   
 [WITH LOCK [SKIP LOCKED]]
+[OPTIMIZE FOR {FIRST | ALL} ROWS]
 [INTO <variables>]                    
 
 <variables> ::= [:]_varname_ [, [:]_varname_ ...]
@@ -3591,6 +3592,24 @@ FOR UPDATE WITH LOCK
 ----
 ====
 
+[[fblangref-dml-select-optimize]]
+=== `OPTIMIZE FOR`
+
+.Назначение
+Изменение стратегии оптимизатора.
+(((SELECT, OPTIMIZE FOR)))
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+SELECT ... 
+FROM [...]
+[WHERE ...] 
+[...]
+[OPTIMIZE FOR {FIRST | ALL} ROWS]
+----
+
+TODO: Написать
 
 [[fblangref-dml-select-into]]
 === `INTO`

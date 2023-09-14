@@ -833,3 +833,24 @@ ALTER SESSION RESET
 .См. также:
 <<fblangref-contextvars-resetting,`RESETTING`>>.
 
+
+[[fblangref-management-optimizer]]
+== Управление оптимизатором
+
+[[fblangref-management-setoptimize]]
+== `SET OPTIMIZE FOR`
+
+.Назначение
+Изменение стратегии оптимизатора.
+(((SET OPTIMIZE FOR)))
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing]
+----
+SET OPTIMIZE FOR {FIRST | ALL} ROWS
+----
+
+TODO: Написать
