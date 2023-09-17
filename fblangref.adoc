@@ -50,7 +50,7 @@ include::_fblangref-appx05-montables.adoc[leveloffset=1]
 
 include::_fblangref-appx06-sectables.adoc[leveloffset=1]
 
-include::_fblangref-appx07-profiler.adoc[leveloffset=1]
+include::_fblangref-appx07-plgtables.adoc[leveloffset=1]
 
 include::_fblangref-appx08-charsets.adoc[leveloffset=1]
 
