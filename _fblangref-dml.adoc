@@ -3631,6 +3631,11 @@ FROM [...]
 
 Предложение `OPTIMIZE FOR` всегда указывает самым последним в `SELECT` запросе, но перед предложением `INTO`.
 
+[NOTE]
+====
+Если в SELECT запросе встречаются предложения `FIRST ... SKIP`, `ROWS`, `OFFSET ... FETCH`, то оптимизатор неявно переключаются в режим `FIRST ROWS`.
+====
+
 [[fblangref-dml-select-into]]
 === `INTO`
 
