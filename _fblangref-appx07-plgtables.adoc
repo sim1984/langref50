@@ -164,7 +164,7 @@
 
 === Таблица `PLG$PROF_RECORD_SOURCES`
 
-Таблица `PLG$PROF_RECORD_SOURCES` содержит информацию об источниках записей.
+Таблица `PLG$PROF_RECORD_SOURCES` содержит информацию о методах доступа.
 
 .Описание столбцов таблицы `PLG$PROF_RECORD_SOURCES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
@@ -198,15 +198,15 @@
 |уровень метода доступа. Необходим для расчёта отступов при конструировании плана.
 
 |ACCESS_PATH
-|VARCHAR(255)
-|путь доступа к источнику записи
+|BLOB SUB_TYPE TEXT
+|описание метода доступа
 |===
 
 Первичный ключ: `PROFILE_ID, STATEMENT_ID, CURSOR_ID, RECORD_SOURCE_ID`
 
 === Таблица `PLG$PROF_REQUESTS`
 
-Таблица `PLG$PROF_REQUESTS` содержит информацию об SQL запросах.
+Таблица `PLG$PROF_REQUESTS` содержит статистику о SQL запросах (по одной записи на каждый запуск запроса).
 
 .Описание столбцов таблицы `PLG$PROF_REQUESTS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
@@ -298,7 +298,7 @@
 
 === Таблица `PLG$PROF_RECORD_SOURCE_STATS`
 
-Таблица `PLG$PROF_RECORD_SOURCES` содержит статистику источников записей.
+Таблица `PLG$PROF_RECORD_SOURCES` содержит статистику по методам доступа.
 
 .Описание столбцов таблицы `PLG$PROF_RECORD_SOURCE_STATS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
@@ -430,44 +430,6 @@
 |Среднее время выполнения (в наносекундах) для строки/столбца
 |===
 
-[source,sql]
-----
-select req.profile_id,
-       req.statement_id,
-       sta.statement_type,
-       sta.package_name,
-       sta.routine_name,
-       sta.parent_statement_id,
-       sta_parent.statement_type parent_statement_type,
-       sta_parent.routine_name parent_routine_name,
-       (select sql_text
-          from plg$prof_statements
-          where profile_id = req.profile_id and
-                statement_id = coalesce(sta.parent_statement_id, req.statement_id)
-       ) sql_text,
-       count(*) counter,
-       min(req.total_elapsed_time) min_elapsed_time,
-       max(req.total_elapsed_time) max_elapsed_time,
-       cast(sum(req.total_elapsed_time) as bigint) total_elapsed_time,
-       cast(sum(req.total_elapsed_time) / count(*) as bigint) avg_elapsed_time
-  from plg$prof_requests req
-  join plg$prof_statements sta
-    on sta.profile_id = req.profile_id and
-       sta.statement_id = req.statement_id
-  left join plg$prof_statements sta_parent
-    on sta_parent.profile_id = sta.profile_id and
-       sta_parent.statement_id = sta.parent_statement_id
-  group by req.profile_id,
-           req.statement_id,
-           sta.statement_type,
-           sta.package_name,
-           sta.routine_name,
-           sta.parent_statement_id,
-           sta_parent.statement_type,
-           sta_parent.routine_name
-  order by sum(req.total_elapsed_time) desc
-----
-
 === Представление `PLG$PROF_PSQL_STATS_VIEW`
 
 Представление `PLG$PROF_PSQL_STATS_VIEW` содержит агрегированную PSQL статистику.
@@ -544,51 +506,9 @@ select req.profile_id,
 |Среднее время выполнения (в наносекундах) для строки/столбца
 |===
 
-[source,sql]
-----
-select pstat.profile_id,
-       pstat.statement_id,
-       sta.statement_type,
-       sta.package_name,
-       sta.routine_name,
-       sta.parent_statement_id,
-       sta_parent.statement_type parent_statement_type,
-       sta_parent.routine_name parent_routine_name,
-       (select sql_text
-          from plg$prof_statements
-          where profile_id = pstat.profile_id and
-                statement_id = coalesce(sta.parent_statement_id, pstat.statement_id)
-       ) sql_text,
-       pstat.line_num,
-       pstat.column_num,
-       cast(sum(pstat.counter) as bigint) counter,
-       min(pstat.min_elapsed_time) min_elapsed_time,
-       max(pstat.max_elapsed_time) max_elapsed_time,
-       cast(sum(pstat.total_elapsed_time) as bigint) total_elapsed_time,
-       cast(sum(pstat.total_elapsed_time) / nullif(sum(pstat.counter), 0) as bigint) avg_elapsed_time
-  from plg$prof_psql_stats pstat
-  join plg$prof_statements sta
-    on sta.profile_id = pstat.profile_id and
-       sta.statement_id = pstat.statement_id
-  left join plg$prof_statements sta_parent
-    on sta_parent.profile_id = sta.profile_id and
-       sta_parent.statement_id = sta.parent_statement_id
-  group by pstat.profile_id,
-           pstat.statement_id,
-           sta.statement_type,
-           sta.package_name,
-           sta.routine_name,
-           sta.parent_statement_id,
-           sta_parent.statement_type,
-           sta_parent.routine_name,
-           pstat.line_num,
-           pstat.column_num
-  order by sum(pstat.total_elapsed_time) desc
-----
-
 === Представление `PLG$PROF_RECORD_SOURCE_STATS_VIEW`
 
-Представление `PLG$PROF_RECORD_SOURCE_STATS_VIEW` содержит агрегированную статистику по источникам записей.
+Представление `PLG$PROF_RECORD_SOURCE_STATS_VIEW` содержит агрегированную статистику по методам доступа.
 
 .Описание столбцов представления `PLG$PROF_RECORD_SOURCE_STATS_VIEW`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
@@ -662,8 +582,8 @@ select pstat.profile_id,
 |уровень метода доступа. Необходим для расчёта отступов при конструировании плана.
 
 |ACCESS_PATH
-|VARCHAR(255)
-|путь доступа к источнику записи
+|BLOB SUB_TYPE TEXT
+|описание метода доступа
 
 |OPEN_COUNTER
 |BIGINT
@@ -705,72 +625,3 @@ select pstat.profile_id,
 |BIGINT
 |Среднее время извлечения записей из источника записи (в наносекундах)
 |===
-
-[source,sql]
-----
-select rstat.profile_id,
-       rstat.statement_id,
-       sta.statement_type,
-       sta.package_name,
-       sta.routine_name,
-       sta.parent_statement_id,
-       sta_parent.statement_type parent_statement_type,
-       sta_parent.routine_name parent_routine_name,
-       (select sql_text
-          from plg$prof_statements
-          where profile_id = rstat.profile_id and
-                statement_id = coalesce(sta.parent_statement_id, rstat.statement_id)
-       ) sql_text,
-       rstat.cursor_id,
-       cur.name cursor_name,
-       cur.line_num cursor_line_num,
-       cur.column_num cursor_column_num,
-       rstat.record_source_id,
-       recsrc.parent_record_source_id,
-       recsrc.level,
-       recsrc.access_path,
-       cast(sum(rstat.open_counter) as bigint) open_counter,
-       min(rstat.open_min_elapsed_time) open_min_elapsed_time,
-       max(rstat.open_max_elapsed_time) open_max_elapsed_time,
-       cast(sum(rstat.open_total_elapsed_time) as bigint) open_total_elapsed_time,
-       cast(sum(rstat.open_total_elapsed_time) / nullif(sum(rstat.open_counter), 0) as bigint) open_avg_elapsed_time,
-       cast(sum(rstat.fetch_counter) as bigint) fetch_counter,
-       min(rstat.fetch_min_elapsed_time) fetch_min_elapsed_time,
-       max(rstat.fetch_max_elapsed_time) fetch_max_elapsed_time,
-       cast(sum(rstat.fetch_total_elapsed_time) as bigint) fetch_total_elapsed_time,
-       cast(sum(rstat.fetch_total_elapsed_time) / nullif(sum(rstat.fetch_counter), 0) as bigint) fetch_avg_elapsed_time,
-       cast(coalesce(sum(rstat.open_total_elapsed_time), 0) + coalesce(sum(rstat.fetch_total_elapsed_time), 0) as bigint) open_fetch_total_elapsed_time
-  from plg$prof_record_source_stats rstat
-  join plg$prof_cursors cur
-    on cur.profile_id = rstat.profile_id and
-       cur.statement_id = rstat.statement_id and
-       cur.cursor_id = rstat.cursor_id
-  join plg$prof_record_sources recsrc
-    on recsrc.profile_id = rstat.profile_id and
-       recsrc.statement_id = rstat.statement_id and
-       recsrc.cursor_id = rstat.cursor_id and
-       recsrc.record_source_id = rstat.record_source_id
-  join plg$prof_statements sta
-    on sta.profile_id = rstat.profile_id and
-       sta.statement_id = rstat.statement_id
-  left join plg$prof_statements sta_parent
-    on sta_parent.profile_id = sta.profile_id and
-       sta_parent.statement_id = sta.parent_statement_id
-  group by rstat.profile_id,
-           rstat.statement_id,
-           sta.statement_type,
-           sta.package_name,
-           sta.routine_name,
-           sta.parent_statement_id,
-           sta_parent.statement_type,
-           sta_parent.routine_name,
-           rstat.cursor_id,
-           cur.name,
-           cur.line_num,
-           cur.column_num,
-           rstat.record_source_id,
-           recsrc.parent_record_source_id,
-           recsrc.level,
-           recsrc.access_path
-  order by coalesce(sum(rstat.open_total_elapsed_time), 0) + coalesce(sum(rstat.fetch_total_elapsed_time), 0) desc
-----
