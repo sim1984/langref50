@@ -206,7 +206,11 @@
 
 === Таблица `PLG$PROF_REQUESTS`
 
-Таблица `PLG$PROF_REQUESTS` содержит статистику о SQL запросах (по одной записи на каждый запуск запроса).
+Таблица `PLG$PROF_REQUESTS` содержит статистику выполнения SQL запросов.
+
+Если профилировщик запущен с опцией `DETAILED_REQUESTS`, то таблица `PLG$PROF_REQUESTS` будет хранить подробные данные запросов, то есть одну запись для каждого вызова оператора. Это может привести к созданию большого количества записей, что приведет к медленной работе `RDB$PROFILER.FLUSH`.
+
+Когда `DETAILED_REQUESTS` не используется (по умолчанию), таблица `PLG$PROF_REQUESTS` сохраняет агрегированную запись для каждого оператора, используя `REQUEST_ID = 0`.
 
 .Описание столбцов таблицы `PLG$PROF_REQUESTS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
@@ -225,7 +229,7 @@
 
 |STATEMENT_ID
 |BIGINT
-|идентификатор оператора
+|идентификатор SQL оператора
 
 |CALLER_REQUEST_ID
 |BIGINT
@@ -624,4 +628,88 @@
 |FETCH_AVG_ELAPSED_TIME
 |BIGINT
 |Среднее время извлечения записей из источника записи (в наносекундах)
+|===
+
+== Плагин управления пользователями `Srp`
+
+=== Таблица `PLG$SRP`
+
+.Описание столбцов таблицы `PLG$SRP`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|PLG$USER_NAME
+|VARCHAR(63)
+|
+
+|PLG$VERIFIER
+|VARBINARY(128)
+|
+
+|PLG$SALT
+|VARBINARY(32)
+|
+
+|PLG$COMMENT
+|BLOB SUB_TYPE TEXT
+|
+
+|PLG$FIRST
+|VARCHAR(32)
+|
+
+|PLG$MIDDLE
+|VARCHAR(32)
+|
+
+|PLG$LAST
+|VARCHAR(32)
+|
+
+|PLG$ATTRIBUTES
+|BLOB SUB_TYPE TEXT
+|
+
+|PLG$ACTIVE
+|BOOLEAN
+|
+
+|===
+
+=== Представление `PLG$SRP_VIEW`
+
+.Описание столбцов представления `PLG$SRP_VIEW`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|===
+
+== Плагин управления пользователями `Legacy_UserManager`
+
+=== Таблица `PLG$USERS`
+
+.Описание столбцов таблицы `PLG$USERS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|===
+
+=== Представление `PLG$VIEW_USERS`
+
+.Описание столбцов представления `PLG$VIEW_USERS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
 |===
