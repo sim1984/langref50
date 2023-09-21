@@ -2,7 +2,7 @@
 :ditto: &#12291;
 
 [appendix]
-[[fblangref-appx-plgtables]]
+[[fblangref-appx07-plgtables]]
 = Таблицы плагинов
 
 Таблицы плагинов — это таблицы или представления, созданные для или с помощью различных плагинов для движка Firebird. Стандартные таблицы плагинов имеют префикс `PLG$` (но могут иметь и другие).
@@ -13,37 +13,289 @@
 
 Таблицы плагинов не считаются системными таблицами.
 
+[[fblangref-appx07-defaultprofiler]]
 == Плагин профилирования `Default_Profiler`
 
-Таблицы профилировщика, перечисленные в этом приложении (имеющие префикс PLG$PROF_), создаются плагином Default_Profiler. Если создан собственный плагин профилировщика, он может использовать другие имена таблиц.
+Таблицы профилировщика, перечисленные в этом приложении (имеющие префикс `PLG$PROF_`), создаются плагином `Default_Profiler`. Если создан собственный плагин профилировщика, он может использовать другие имена таблиц.
 
 Таблицы моментальных снимков, а также представления и последовательности, автоматически создаются при первом использовании профилировщика. Они принадлежат текущему пользователю с разрешениями на чтение/запись для `PUBLIC`.
 
 Когда сеанс удаляется, связанные данные в других таблицах моментальных снимков профилировщика также автоматически удаляются с помощью внешних ключей с опцией `DELETE CASCADE`.
 
-Ниже приведен список таблиц, в которых хранятся данные профиля.
+Ниже приведен список таблиц, в которых хранятся данные профилирования.
 
-`PLG$PROF_SESSIONS`:: информация о сессиях профилирования.
-`PLG$PROF_STATEMENTS`:: информация об SQL операторах.
-`PLG$PROF_CURSORS`:: информация о курсорах.
-`PLG$PROF_RECORD_SOURCES`:: информация об источниках записей.
-`PLG$PROF_REQUESTS`:: информация об SQL запросах.
-`PLG$PROF_PSQL_STATS`:: PSQL статистика.
-`PLG$PROF_RECORD_SOURCE_STATS`:: статистика источников записей.
+<<fblangref-appx07-profcursors>>:: информация о курсорах в сеансе профилирования.
+<<fblangref-appx07-profpsqlstats>>:: PSQL статистика в сеансе профилирования.
+<<fblangref-appx07-profrecordsources>>:: информация о методах доступа в сеансе профилирования.
+<<fblangref-appx07-profrecordsourcesstats>>:: статистика методов доступа в сеансе профилирования.
+<<fblangref-appx07-profrequests>>:: информация о SQL запросах в сеансе профилирования.
+<<fblangref-appx07-profsessions>>:: сессии профилирования.
+<<fblangref-appx07-profstatements>>:: информация о SQL операторах в сеансе профилирования.
 
-Кроме того, плагин `Default_Profiler` создаёт несколько представлений. Эти представления помогают извлекать данные профилирования, агрегированные на уровне операторов.
+Кроме того, плагин `Default_Profiler` создаёт несколько представлений. Эти представления помогают извлекать данные профилирования, агрегированные на уровне SQL операторов.
 
 Они должны быть предпочтительным способом анализа собранных данных. Их также можно использовать вместе с таблицами для получения дополнительных данных, отсутствующих в представлениях.
 
-После того, как «горячие точки» найдены, можно детализировать данные на уровне запроса через таблицы.
+После того, как "`горячие точки`" найдены, можно детализировать данные на уровне запроса через таблицы.
 
-Ниже приведен список представлений, созданных профилировщиком:
+Ниже приведен список представлений профилировщика `Default_Profiler`.
 
-`PLG$PROF_STATEMENT_STATS_VIEW`:: агрегированная статистика SQL операторов.
-`PLG$PROF_PSQL_STATS_VIEW`:: агрегированная PSQL статистика.
-`PLG$PROF_RECORD_SOURCE_STATS_VIEW`:: агрегированная статистика по источникам записей.
+<<fblangref-appx07-profpsqlstatsview>>:: агрегированная PSQL статистика в сеансе профилирования.
+<<fblangref-appx07-profrecordsourcestatsview>>:: агрегированная статистика по методам доступа в сеансе профилирования.
+<<fblangref-appx07-profstatementstatsview>>:: агрегированная статистика SQL операторов в сеансе профилирования.
 
+[[fblangref-appx07-profcursors]]
+=== Таблица `PLG$PROF_CURSORS`
 
+Таблица `PLG$PROF_CURSORS` содержит информацию о курсорах.
+
+.Описание столбцов таблицы `PLG$PROF_CURSORS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|PROFILE_ID
+|BIGINT
+|идентификатор сессии профилирования
+
+|STATEMENT_ID
+|BIGINT
+|идентификатор оператора
+
+|CURSOR_ID
+|BIGINT
+|идентификатор курсора
+
+|NAME
+|CHAR(63)
+|имя явно объявленного курсора
+
+|LINE_NUM
+|INTEGER
+|номер строки PSQL в которой определён курсор
+
+|COLUMN_NUM
+|INTEGER
+|номер столбца PSQL в котором определён курсор
+|===
+
+ Первичный ключ `PROFILE_ID, STATEMENT_ID, CURSOR_ID`
+
+[[fblangref-appx07-profpsqlstats]]
+=== Таблица `PLG$PROF_PSQL_STATS`
+
+Таблица `PLG$PROF_PSQL_STATS` содержит PSQL статистику.
+
+.Описание столбцов таблицы `PLG$PROF_PSQL_STATS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|PROFILE_ID
+|BIGINT
+|идентификатор сессии профилирования
+
+|STATEMENT_ID
+|BIGINT
+|идентификатор оператора
+
+|REQUEST_ID
+|BIGINT
+|идентификатор запроса
+
+|LINE_NUM
+|INTEGER
+|номер строки в PSQL для оператора
+
+|COLUMN_NUM
+|INTEGER
+|номер столбца в PSQL для оператора
+
+|COUNTER
+|BIGINT
+|количество выполнений для номера строки/столбца
+
+|MIN_ELAPSED_TIME
+|BIGINT
+|Минимальное время выполнения (в наносекундах) для строки/столбца
+
+|MAX_ELAPSED_TIME
+|BIGINT
+|Максимальное время выполнения (в наносекундах) для строки/столбца
+
+|TOTAL_ELAPSED_TIME
+|BIGINT
+|Накопленное время выполнения (в наносекундах) для строки/столбца
+|===
+
+Первичный ключ: `PROFILE_ID, STATEMENT_ID, REQUEST_ID, LINE_NUM, COLUMN_NUM`.
+
+[[fblangref-appx07-profrecordsources]]
+=== Таблица `PLG$PROF_RECORD_SOURCES`
+
+Таблица `PLG$PROF_RECORD_SOURCES` содержит информацию о методах доступа.
+
+.Описание столбцов таблицы `PLG$PROF_RECORD_SOURCES`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|PROFILE_ID
+|BIGINT
+|идентификатор сессии профилирования
+
+|STATEMENT_ID
+|BIGINT
+|идентификатор оператора
+
+|CURSOR_ID
+|BIGINT
+|идентификатор курсора
+
+|RECORD_SOURCE_ID
+|BIGINT
+|идентификатор метода доступа
+
+|PARENT_RECORD_SOURCE_ID
+|BIGINT
+|идентификатор родительского метода доступа
+
+|LEVEL
+|INTEGER
+|уровень отступа для метода доступа. Необходим при конструировании подробного плана.
+
+|ACCESS_PATH
+|BLOB SUB_TYPE TEXT
+|описание метода доступа
+|===
+
+Первичный ключ: `PROFILE_ID, STATEMENT_ID, CURSOR_ID, RECORD_SOURCE_ID`
+
+[[fblangref-appx07-profrecordsourcesstats]]
+=== Таблица `PLG$PROF_RECORD_SOURCE_STATS`
+
+Таблица `PLG$PROF_RECORD_SOURCES` содержит статистику по методам доступа.
+
+.Описание столбцов таблицы `PLG$PROF_RECORD_SOURCE_STATS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|PROFILE_ID
+|BIGINT
+|идентификатор сессии профилирования
+
+|STATEMENT_ID
+|BIGINT
+|идентификатор оператора
+
+|REQUEST_ID
+|BIGINT
+|идентификатор запроса
+
+|CURSOR_ID
+|BIGINT
+|идентификатор курсора
+
+|RECORD_SOURCE_ID
+|BIGINT
+|идентификатор метода доступа
+
+|OPEN_COUNTER
+|BIGINT
+|количество открытий источника записи
+
+|OPEN_MIN_ELAPSED_TIME
+|BIGINT
+|Минимальное время открытия источника записи (в наносекундах)
+
+|OPEN_MAX_ELAPSED_TIME
+|BIGINT
+|Максимальное время открытия источника записи (в наносекундах)
+
+|OPEN_TOTAL_ELAPSED_TIME
+|BIGINT
+|Накопленное время открытия источника записи (в наносекундах)
+
+|FETCH_COUNTER
+|BIGINT
+|Количество извлечений из источника записи
+
+|FETCH_MIN_ELAPSED_TIME
+|BIGINT
+|Минимальное время извлечения записи из источника записи (в наносекундах)
+
+|FETCH_MAX_ELAPSED_TIME
+|BIGINT
+|Максимальное время извлечения записи из источника записи (в наносекундах)
+
+|FETCH_TOTAL_ELAPSED_TIME
+|BIGINT
+|Накопленное время извлечения записей из источника записи (в наносекундах)
+|===
+
+Первичный ключ: `PROFILE_ID, STATEMENT_ID, REQUEST_ID, CURSOR_ID, RECORD_SOURCE_ID`
+
+[[fblangref-appx07-profrequests]]
+=== Таблица `PLG$PROF_REQUESTS`
+
+Таблица `PLG$PROF_REQUESTS` содержит статистику выполнения SQL запросов.
+
+Если профилировщик запущен с опцией `DETAILED_REQUESTS`, то таблица `PLG$PROF_REQUESTS` будет хранить подробные данные запросов, то есть одну запись для каждого вызова оператора. Это может привести к созданию большого количества записей, что приведет к медленной работе `RDB$PROFILER.FLUSH`.
+
+Когда `DETAILED_REQUESTS` не используется (по умолчанию), таблица `PLG$PROF_REQUESTS` сохраняет агрегированную запись для каждого оператора, используя `REQUEST_ID = 0`.
+
+.Описание столбцов таблицы `PLG$PROF_REQUESTS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|PROFILE_ID
+|BIGINT
+|идентификатор сессии профилирования
+
+|STATEMENT_ID
+|BIGINT
+|идентификатор SQL оператора
+
+|REQUEST_ID
+|BIGINT
+|идентификатор запроса
+
+|CALLER_STATEMENT_ID
+|BIGINT
+|идентификатор SQL оператора
+
+|CALLER_REQUEST_ID
+|BIGINT
+|идентификатор вызывающего запроса
+
+|START_TIMESTAMP
+|TIMESTAMP WITH TIME ZONE
+|момент старта запроса
+
+|FINISH_TIMESTAMP
+|TIMESTAMP WITH TIME ZONE
+|момент завершения запроса
+
+|TOTAL_ELAPSED_TIME
+|BIGINT
+|Накопленное время выполнения запроса (в наносекундах)
+|===
+
+Первичный ключ: `PROFILE_ID, STATEMENT_ID, REQUEST_ID`.
+
+[[fblangref-appx07-profsessions]]
 === Таблица `PLG$PROF_SESSIONS`
 
 Таблица `PLG$PROF_SESSIONS` содержит информацию о сессиях профилирования.
@@ -82,6 +334,7 @@
 
 Первичный ключ: `PROFILE_ID`
 
+[[fblangref-appx07-profstatements]]
 === Таблица `PLG$PROF_STATEMENTS`
 
 Таблица `PLG$PROF_STATEMENTS` содержит информацию об SQL операторах.
@@ -124,316 +377,7 @@
 
 Первичный ключ: `PROFILE_ID, STATEMENT_ID`
 
-## Table `PLG$PROF_CURSORS`
-
-Таблица `PLG$PROF_CURSORS` содержит информацию о курсорах.
-
-.Описание столбцов таблицы `PLG$PROF_CURSORS`
-[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
-|===
-^| Наименование столбца
-^| Тип данных
-^| Описание
-
-|PROFILE_ID
-|BIGINT
-|идентификатор сессии профилирования
-
-|STATEMENT_ID
-|BIGINT
-|идентификатор оператора
-
-|CURSOR_ID
-|BIGINT
-|идентификатор курсора
-
-|NAME
-|CHAR(63)
-|имя явно объявленного курсора
-
-|LINE_NUM
-|INTEGER
-|номер строки в которой определён курсор
-
-|COLUMN_NUM
-|INTEGER
-|номер столбца в котором определён курсор
-|===
-
- Первичный ключ `PROFILE_ID, STATEMENT_ID, CURSOR_ID`
-
-=== Таблица `PLG$PROF_RECORD_SOURCES`
-
-Таблица `PLG$PROF_RECORD_SOURCES` содержит информацию о методах доступа.
-
-.Описание столбцов таблицы `PLG$PROF_RECORD_SOURCES`
-[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
-|===
-^| Наименование столбца
-^| Тип данных
-^| Описание
-
-|PROFILE_ID
-|BIGINT
-|идентификатор сессии профилирования
-
-|STATEMENT_ID
-|BIGINT
-|идентификатор оператора
-
-|CURSOR_ID
-|BIGINT
-|идентификатор курсора
-
-|RECORD_SOURCE_ID
-|BIGINT
-|идентификатор источника записи
-
-|PARENT_RECORD_SOURCE_ID
-|BIGINT
-|идентификатор источника родительской записи
-
-|LEVEL
-|INTEGER
-|уровень метода доступа. Необходим для расчёта отступов при конструировании плана.
-
-|ACCESS_PATH
-|BLOB SUB_TYPE TEXT
-|описание метода доступа
-|===
-
-Первичный ключ: `PROFILE_ID, STATEMENT_ID, CURSOR_ID, RECORD_SOURCE_ID`
-
-=== Таблица `PLG$PROF_REQUESTS`
-
-Таблица `PLG$PROF_REQUESTS` содержит статистику выполнения SQL запросов.
-
-Если профилировщик запущен с опцией `DETAILED_REQUESTS`, то таблица `PLG$PROF_REQUESTS` будет хранить подробные данные запросов, то есть одну запись для каждого вызова оператора. Это может привести к созданию большого количества записей, что приведет к медленной работе `RDB$PROFILER.FLUSH`.
-
-Когда `DETAILED_REQUESTS` не используется (по умолчанию), таблица `PLG$PROF_REQUESTS` сохраняет агрегированную запись для каждого оператора, используя `REQUEST_ID = 0`.
-
-.Описание столбцов таблицы `PLG$PROF_REQUESTS`
-[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
-|===
-^| Наименование столбца
-^| Тип данных
-^| Описание
-
-|PROFILE_ID
-|BIGINT
-|идентификатор сессии профилирования
-
-|REQUEST_ID
-|BIGINT
-|идентификатор запроса
-
-|STATEMENT_ID
-|BIGINT
-|идентификатор SQL оператора
-
-|CALLER_REQUEST_ID
-|BIGINT
-|идентификатор вызывающего запроса
-
-|START_TIMESTAMP
-|TIMESTAMP WITH TIME ZONE
-|момент, когда данный запрос впервые собрал данные профилирования
-
-|FINISH_TIMESTAMP
-|TIMESTAMP WITH TIME ZONE
-|момент завершения запроса
-
-|TOTAL_ELAPSED_TIME
-|BIGINT
-|Накопленное время выполнения запроса (в наносекундах)
-|===
-
-Первичный ключ: `PROFILE_ID, REQUEST_ID`.
-
-=== Таблица `PLG$PROF_PSQL_STATS`
-
-Таблица `PLG$PROF_PSQL_STATS` содержит PSQL статистику.
-
-.Описание столбцов таблицы `PLG$PROF_PSQL_STATS`
-[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
-|===
-^| Наименование столбца
-^| Тип данных
-^| Описание
-
-|PROFILE_ID
-|BIGINT
-|идентификатор сессии профилирования
-
-|REQUEST_ID
-|BIGINT
-|идентификатор запроса
-
-|LINE_NUM
-|INTEGER
-|номер строки оператора
-
-|COLUMN_NUM
-|INTEGER
-|номер столбца оператора
-
-|STATEMENT_ID
-|BIGINT
-|идентификатор оператора
-
-|COUNTER
-|BIGINT
-|количество выполнений для номера строки/столбца
-
-|MIN_ELAPSED_TIME
-|BIGINT
-|Минимальное время выполнения (в наносекундах) для строки/столбца
-
-|MAX_ELAPSED_TIME
-|BIGINT
-|Максимальное время выполнения (в наносекундах) для строки/столбца
-
-|TOTAL_ELAPSED_TIME
-|BIGINT
-|Накопленное время выполнения (в наносекундах) для строки/столбца
-|===
-
-Первичный ключ: `PROFILE_ID, REQUEST_ID, LINE_NUM, COLUMN_NUM`.
-
-=== Таблица `PLG$PROF_RECORD_SOURCE_STATS`
-
-Таблица `PLG$PROF_RECORD_SOURCES` содержит статистику по методам доступа.
-
-.Описание столбцов таблицы `PLG$PROF_RECORD_SOURCE_STATS`
-[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
-|===
-^| Наименование столбца
-^| Тип данных
-^| Описание
-
-|PROFILE_ID
-|BIGINT
-|идентификатор сессии профилирования
-
-|REQUEST_ID
-|BIGINT
-|идентификатор запроса
-
-|CURSOR_ID
-|BIGINT
-|идентификатор курсора
-
-|RECORD_SOURCE_ID
-|BIGINT
-|идентификатор источника записи
-
-|STATEMENT_ID
-|BIGINT
-|идентификатор оператора
-
-|OPEN_COUNTER
-|BIGINT
-|количество открытий источника записи
-
-|OPEN_MIN_ELAPSED_TIME
-|BIGINT
-|Минимальное время открытия источника записи (в наносекундах)
-
-|OPEN_MAX_ELAPSED_TIME
-|BIGINT
-|Максимальное время открытия источника записи (в наносекундах)
-
-|OPEN_TOTAL_ELAPSED_TIME
-|BIGINT
-|Накопленное время открытия источника записи (в наносекундах)
-
-|FETCH_COUNTER
-|BIGINT
-|Количество извлечений из источника записи
-
-|FETCH_MIN_ELAPSED_TIME
-|BIGINT
-|Минимальное время извлечения записи из источника записи (в наносекундах)
-
-|FETCH_MAX_ELAPSED_TIME
-|BIGINT
-|Максимальное время извлечения записи из источника записи (в наносекундах)
-
-|FETCH_TOTAL_ELAPSED_TIME
-|BIGINT
-|Накопленное время извлечения записей из источника записи (в наносекундах)
-|===
-
-Первичный ключ: `PROFILE_ID, REQUEST_ID, CURSOR_ID, RECORD_SOURCE_ID`
-
-=== Представление `PLG$PROF_STATEMENT_STATS_VIEW`
-
-Представление `PLG$PROF_STATEMENT_STATS_VIEW` содержит агрегированную статистику SQL операторов.
-
-.Описание столбцов представления `PLG$PROF_STATEMENT_STATS_VIEW`
-[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
-|===
-^| Наименование столбца
-^| Тип данных
-^| Описание
-
-|PROFILE_ID
-|BIGINT
-|идентификатор сессии профилирования
-
-|STATEMENT_ID
-|BIGINT
-|идентификатор оператора
-
-|STATEMENT_TYPE
-|VARCHAR(20)
-|типа оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
-
-|PACKAGE_NAME
-|CHAR(63)
-|Имя пакета
-
-|ROUTINE_NAME
-|CHAR(63)
-|Имя функции, процедуры или триггера
-
-|PARENT_STATEMENT_ID
-|BIGINT
-|идентификатор родительского оператора
-
-|PARENT_STATEMENT_TYPE
-|VARCHAR(20)
-|типа родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
-
-|PARENT_ROUTINE_NAME
-|CHAR(63)
-|Имя родительской функции, процедуры или триггера
-
-|SQL_TEXT
-|BLOB SUB_TYPE TEXT
-|SQL текст для типа BLOCK
-
-|COUNTER
-|BIGINT
-|количество выполнений для номера строки/столбца
-
-|MIN_ELAPSED_TIME
-|BIGINT
-|Минимальное время выполнения (в наносекундах) для строки/столбца
-
-|MAX_ELAPSED_TIME
-|BIGINT
-|Максимальное время выполнения (в наносекундах) для строки/столбца
-
-|TOTAL_ELAPSED_TIME
-|BIGINT
-|Накопленное время выполнения (в наносекундах) для строки/столбца
-
-|AVG_ELAPSED_TIME
-|BIGINT
-|Среднее время выполнения (в наносекундах) для строки/столбца
-|===
-
+[[fblangref-appx07-profpsqlstatsview]]
 === Представление `PLG$PROF_PSQL_STATS_VIEW`
 
 Представление `PLG$PROF_PSQL_STATS_VIEW` содержит агрегированную PSQL статистику.
@@ -479,15 +423,15 @@
 
 |SQL_TEXT
 |BLOB SUB_TYPE TEXT
-|SQL текст для типа BLOCK
+|SQL текст для операторов типа BLOCK
 
 |LINE_NUM
 |INTEGER
-|номер строки оператора
+|номер строки в PSQL для оператора
 
 |COLUMN_NUM
 |INTEGER
-|номер столбца оператора
+|номер столбца в PSQL для оператора
 
 |COUNTER
 |BIGINT
@@ -510,6 +454,7 @@
 |Среднее время выполнения (в наносекундах) для строки/столбца
 |===
 
+[[fblangref-appx07-profrecordsourcestatsview]]
 === Представление `PLG$PROF_RECORD_SOURCE_STATS_VIEW`
 
 Представление `PLG$PROF_RECORD_SOURCE_STATS_VIEW` содержит агрегированную статистику по методам доступа.
@@ -630,8 +575,78 @@
 |Среднее время извлечения записей из источника записи (в наносекундах)
 |===
 
+[[fblangref-appx07-profstatementstatsview]]
+=== Представление `PLG$PROF_STATEMENT_STATS_VIEW`
+
+Представление `PLG$PROF_STATEMENT_STATS_VIEW` содержит агрегированную статистику SQL операторов.
+
+.Описание столбцов представления `PLG$PROF_STATEMENT_STATS_VIEW`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|PROFILE_ID
+|BIGINT
+|идентификатор сессии профилирования
+
+|STATEMENT_ID
+|BIGINT
+|идентификатор оператора
+
+|STATEMENT_TYPE
+|VARCHAR(20)
+|типа оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
+
+|PACKAGE_NAME
+|CHAR(63)
+|Имя пакета
+
+|ROUTINE_NAME
+|CHAR(63)
+|Имя функции, процедуры или триггера
+
+|PARENT_STATEMENT_ID
+|BIGINT
+|идентификатор родительского оператора
+
+|PARENT_STATEMENT_TYPE
+|VARCHAR(20)
+|типа родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
+
+|PARENT_ROUTINE_NAME
+|CHAR(63)
+|Имя родительской функции, процедуры или триггера
+
+|SQL_TEXT
+|BLOB SUB_TYPE TEXT
+|SQL текст для типа BLOCK
+
+|COUNTER
+|BIGINT
+|количество выполнений для номера строки/столбца
+
+|MIN_ELAPSED_TIME
+|BIGINT
+|Минимальное время выполнения (в наносекундах) для строки/столбца
+
+|MAX_ELAPSED_TIME
+|BIGINT
+|Максимальное время выполнения (в наносекундах) для строки/столбца
+
+|TOTAL_ELAPSED_TIME
+|BIGINT
+|Накопленное время выполнения (в наносекундах) для строки/столбца
+
+|AVG_ELAPSED_TIME
+|BIGINT
+|Среднее время выполнения (в наносекундах) для строки/столбца
+|===
+
 == Плагин управления пользователями `Srp`
 
+[[fblangref-appx07-plgsrp]]
 === Таблица `PLG$SRP`
 
 Таблица `PLG$SRP` хранит список пользователей и информацию для их аутентификации плагинами аутентификации семейства SRP.
@@ -681,6 +696,7 @@
 
 |===
 
+[[fblangref-appx07-plgsrpview]]
 === Представление `PLG$SRP_VIEW`
 
 Представление `PLG$SRP_VIEW` определяет какие пользователи доступны для просмотра через виртуальную таблицу `SEC$USERS` и
@@ -751,6 +767,7 @@ WHERE RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) OR CURRENT_USER = PLG$SRP.PLG$USER_N
 
 == Плагин управления пользователями `Legacy_UserManager`
 
+[[fblangref-appx07-plgusers]]
 === Таблица `PLG$USERS`
 
 Таблица `PLG$USERS` хранит список пользователей и информацию для их аутентификации плагином аутентификации `Legacy_Auth`.
@@ -804,6 +821,7 @@ WHERE RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) OR CURRENT_USER = PLG$SRP.PLG$USER_N
 
 |===
 
+[[fblangref-appx07-plgusersview]]
 === Представление `PLG$VIEW_USERS`
 
 Представление `PLG$VIEW_USERS` определяет какие пользователи доступны для просмотра через виртуальную таблицу `SEC$USERS` и
