@@ -20,7 +20,7 @@ DSQL, ESQL
 ----
 COMMENT ON <object> IS {'_sometext_' | NULL}
 <object> ::= 
-    DATABASE 
+    { DATABASE | SCHEMA }
   | <basic-type> _objectname_
   | USER _username_ [USING PLUGIN _plugin_name_]  
   | COLUMN _relationname_._fieldname_  
@@ -28,6 +28,7 @@ COMMENT ON <object> IS {'_sometext_' | NULL}
     [_package_name_.] _routinename_._paramname_
   | {PROCEDURE | [EXTERNAL] FUNCTION} 
     [_package_name_.]_routinename_
+  | [GLOBAL] MAPPING _mappingname_ 
 
 <basic-type> ::= 
     CHARACTER SET 
@@ -43,7 +44,6 @@ COMMENT ON <object> IS {'_sometext_' | NULL}
   | TABLE 
   | TRIGGER 
   | VIEW
-  | MAPPING
   
 ----
 
@@ -83,6 +83,9 @@ COMMENT ON <object> IS {'_sometext_' | NULL}
 
 |plugin_name
 |Имя плагина управления пользователями.
+
+|mappingname
+|Имя отображения.
 |===
 
 Оператор `COMMENT ON` добавляет комментарии для объектов базы данных (метаданных). Комментарии при этом сохраняются в текстовые поля `RDB$DESCRIPTION` типа `BLOB` соответствующей системной таблицы (из этих полей клиентское приложение может просмотреть комментарии).

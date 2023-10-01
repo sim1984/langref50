@@ -135,6 +135,13 @@ ANY, SOME могут быть использованы только с подз�
 
 <separator> ::=
   { <comment> | <white space> }
+
+<introducer> ::= underscore (U+005F)
+
+<quote> ::= apostrophe (U+0027)
+
+<char> ::= character representation;
+apostrophe is escaped by doubling
 ----
 
 
