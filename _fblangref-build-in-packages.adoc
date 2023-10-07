@@ -556,14 +556,14 @@ set term ;!
 что можно сделать, завершив или приостановив сеанс (с параметром `FLUSH`, установленным в `TRUE`) или вызвав `RDB$PROFILER.FLUSH`.
 Данные сбрасываются с помощью автономной транзакции (транзакция, запущенная и завершенная для конкретной цели обновления данных профилировщика).
 
-Ниже приведен пример сеанса профилировщика и запросов для анализа данных.
-
 === Пример
 
+Ниже приведен пример сеанса профилировщика и запросов для анализа данных.
+
+1. Подготовка — создание таблицы и процедур, которые будут анализироваться.
++
 [source,sql]
 ----
--- Preparation - create table and routines that will be analyzed
-
 create table tab (
     id integer not null,
     val integer not null
@@ -591,9 +591,12 @@ begin
 end!
 
 set term ;!
+----
 
--- Start profiling
-
+2. Запуск профилирования.
++
+[source,sql]
+----
 select rdb$profiler.start_session('Profile Session 1') from rdb$database;
 
 set term !;
@@ -621,9 +624,11 @@ select mod(id, 5),
   order by sum(val);
 
 execute procedure rdb$profiler.finish_session(true);
+----
 
--- Data analysis
-
+3. Анализ результатов профилирования.
++
+----
 set transaction read committed;
 
 select * from plg$prof_sessions;
