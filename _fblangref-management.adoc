@@ -784,9 +784,11 @@ set time zone local;
 ----
 ====
 
+[[fblangref-reset-session]]
+== Сброс состояния сессии
 
 [[fblangref-management-resetsession]]
-== `ALTER SESSION RESET`
+=== `ALTER SESSION RESET`
 
 .Назначение
 Сброс сессионного окружения.
@@ -820,7 +822,7 @@ ALTER SESSION RESET
 * системная переменная `RESETTING` устанавливается в `FALSE`.
 
 
-=== Обработка ошибок
+==== Обработка ошибок
 
 Ошибка, возникшая в триггере `ON DISCONNECT`, прерывает сброс сеанса и оставляет состояние сеанса неизменным.
 Такие ошибки сообщаются с кодом основной ошибки `isc_session_reset_err` и текстом ошибки
@@ -839,11 +841,11 @@ ALTER SESSION RESET
 == Управление оптимизатором
 
 [[fblangref-management-setoptimize]]
-== `SET OPTIMIZE FOR`
+=== `SET OPTIMIZE`
 
 .Назначение
 Изменение стратегии оптимизатора.
-(((SET OPTIMIZE FOR)))
+(((SET OPTIMIZE)))
 
 .Доступно в
 DSQL
@@ -851,10 +853,14 @@ DSQL
 .Синтаксис
 [listing]
 ----
-SET OPTIMIZE FOR {FIRST | ALL} ROWS
+SET OPTIMIZE <optimize-mode>
+
+<optimize-mode> ::=
+    FOR {FIRST | ALL} ROWS
+  | TO DEFAULT
 ----
 
-Оператор `SET OPTIMIZE FOR` позволяет изменить стратегию оптимизатора на уровне текущей сессии.
+Оператор `SET OPTIMIZE` позволяет изменить стратегию оптимизатора на уровне текущей сессии.
 
 Существует две стратегии оптимизации запросов:
 
@@ -869,3 +875,39 @@ SET OPTIMIZE FOR {FIRST | ALL} ROWS
 
 .См. также:
 <<fblangref-dml-select-optimize,`OPTIMIZE FOR`>>.
+
+[[fblangref-management-debugging]]
+== Отладка
+
+[[fblangref-management-setdebugopt]]
+=== `SET DEBUG OPTION`
+
+Устанавливает опции отладки.
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+SET DEBUG OPTION _option-name_ = _value_
+----
+
+[[fblangref-dml-tbl-from]]
+.Поддерживаемые опции
+[cols="<1,<1,<3", options="header",stripes="none"]
+|===
+^| Наименование опции
+^| Тип значения
+^| Описание
+
+|DSQL_KEEP_BLR
+|BOOLEAN
+|Сохраняет BLR оператора для извлечения с помощью
+`isc_info_sql_exec_path_blr_bytes` и `isc_info_sql_exec_path_blr_text`.
+
+|===
+
+Оператор `SET DEBUG OPTION` настраивает отладочную информацию для текущего соединения.
+
+[WARNING]
+====
+Параметры отладки тесно связаны с внутренними компонентами движка, и их использование не рекомендуется, если вы не понимаете, как эти внутренние компоненты могут изменяться в зависимости от версии.
+====

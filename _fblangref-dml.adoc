@@ -3662,7 +3662,7 @@ FROM [...]
 `firebird.conf` или `database.conf`.  `OptimizeForFirstRows = false` соответствует стратегии `ALL ROWS`,
 `OptimizeForFirstRows = true` соответствует стратегии `FIRST ROWS`.
 
-Стратегия оптимизации может быть также изменена на уровне сессии с помощью оператора <<fblangref-management-setoptimize,`SET OPTIMIZE FOR`>>.
+Стратегия оптимизации может быть также изменена на уровне сессии с помощью оператора <<fblangref-management-setoptimize,`SET OPTIMIZE`>>.
 Предложение `OPTIMIZE FOR` указанное в SQL операторе позволяет переопределить стратегию указанную на уровне сессии.
 
 Предложение `OPTIMIZE FOR` всегда указывает самым последним в `SELECT` запросе, но перед предложением `INTO`.
