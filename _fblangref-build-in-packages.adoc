@@ -1,5 +1,18 @@
 [[fblangref-build-in-packages]]
-= Встроенные пакеты
+= Системные пакеты
+
+Системные пакеты предоставляют служебные хранимые процедуры и функции.
+
+.List of System Packages
+<<fblangref-build-in-package-blob-util-pkg>>::
+Утилиты для манипуляции BLOB
+
+<<fblangref-build-in-package-profiler-pkg>>::
+Профилировщик
+
+<<fblangref-build-in-packages-time-zone-util-pkg>>::
+Утилиты поддержки часовых поясов
+
 
 [[fblangref-build-in-package-blob-util-pkg]]
 == Пакет `RDB$BLOB_UTIL`
