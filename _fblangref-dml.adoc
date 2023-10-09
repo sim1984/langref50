@@ -16,7 +16,7 @@ DSQL, ESQL, PSQL
 ----
 [WITH [RECURSIVE] <cte> [, <cte> ...]]   
 SELECT 
-  [FIRST _m_] [SKIP n]
+  [FIRST <limit-expression>] [SKIP <limit-expression>]
   [DISTINCT | ALL] <columns>   
 FROM 
   <source> [[AS] _alias_]
@@ -28,9 +28,9 @@ FROM
 [PLAN <plan-expr>]   
 [UNION [DISTINCT | ALL] <other-select>]   
 [ORDER BY <ordering-list>] 
-[   {ROWS m [TO n]} 
-  | {[OFFSET n {ROW | ROWS}] 
-     [FETCH {FIRST | NEXT} [m] {ROW | ROWS} ONLY]}
+[   { ROWS <value-expression> [TO <value-expression>>] } 
+  | { [OFFSET <offset-fetch-expression> {ROW | ROWS}] 
+      [FETCH {FIRST | NEXT} [<offset-fetch-expression>] {ROW | ROWS} ONLY] }
 ]   
 [FOR UPDATE [OF <columns>]]   
 [WITH LOCK [SKIP LOCKED]]
@@ -85,11 +85,11 @@ SELECT * FROM contacts
 .Синтаксис
 [listing]
 ----
-SELECT [FIRST <m>] [SKIP <n>] 
+SELECT [FIRST <limit-expression>] [SKIP <limit-expression>] 
 FROM ... 
 ... 
 
-<m>, <n> ::=
+<limit-expression> ::=
     <integer-literal>
   | <query-parameter>
   | (<integer-expression>)
@@ -119,9 +119,9 @@ FROM ...
 Рекомендуется использовать <<fblangref-dml-select-fetch-offset>> везде, где это возможно.
 ====
 
-Выражение `FIRST` ограничивает результирующий набор данным указанным числом записей _m_.
+Выражение `FIRST m` ограничивает результирующий набор данным указанным числом записей _m_.
 
-Выражение `SKIP` пропускает указанное число записей _n_ перед выдачей результирующего набора данных.
+Выражение `SKIP n` пропускает указанное число записей _n_ перед выдачей результирующего набора данных.
 
 `FIRST` и `SKIP` являются необязательными выражениями.
 
@@ -3162,7 +3162,7 @@ ORDER BY 2 DESC NULLS LAST, 1 ASC NULLS FIRST
 SELECT <columns> FROM ...
   [WHERE ...]
   [ORDER BY ...]
-  ROWS _m_ [TO _n_]
+  ROWS <value-expression> [TO <value-expression>]
 ----
 
 [[fblangref-dml-tbl-rows]]
@@ -3172,13 +3172,13 @@ SELECT <columns> FROM ...
 ^| Параметр
 ^| Описание
 
-|m, n
+|value-expression
 |Любые целочисленные выражения.
 |===
 
 Предложение `ROWS` было введено для совместимости с Interbase 6.5 и выше.
 
-В отличие от `FIRST` и `SKIP`, выражение `ROWS` принимает все типы целочисленных (integer) выражений в качестве аргумента – без скобок! Конечно, скобки могут требоваться для правильных вычислений внутри выражения, и вложенный запрос также должен быть обернут в скобки.
+В отличие от `FIRST` и `SKIP`, выражение `ROWS` принимает все типы целочисленных (integer) выражений в качестве аргумента – без скобок! Конечно, скобки могут требоваться для правильных вычислений внутри выражения, и вложенный запрос также должен быть обернут в скобки. Если результат выражения не явлется целым числом, то будет приведено к целому числу, если это возможно.
 
 [IMPORTANT]
 ====
@@ -3309,10 +3309,10 @@ ROWS 81 TO 100
 SELECT <columns> FROM ...
   [WHERE ...]
   [ORDER BY ...]
-  [OFFSET <m> {ROW | ROWS}]
-  [FETCH {FIRST | NEXT} [ <n> ] { ROW | ROWS } ONLY]
+  [OFFSET <offset-fetch-expression> {ROW | ROWS}]
+  [FETCH {FIRST | NEXT} [ <offset-fetch-expression> ] { ROW | ROWS } ONLY]
 
-<m>, <n>  ::=
+<offset-fetch-expression>  ::=
     <integer-literal>
   | <query-parameter>
 ----
