@@ -890,7 +890,7 @@ SET OPTIMIZE <optimize-mode>
 SET DEBUG OPTION _option-name_ = _value_
 ----
 
-[[fblangref-dml-tbl-from]]
+[[fblangref-management-tbl-setdebug]]
 .Поддерживаемые опции
 [cols="<1,<1,<3", options="header",stripes="none"]
 |===
