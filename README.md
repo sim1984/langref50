@@ -89,10 +89,10 @@ Language Reference for Firebird 5.0 RC 1
 
  
 -   PDF —
-    [firebird-50-language-reference.pdf](https://github.com/sim1984/langref50/releases/download/1.0/firebird-50-language-reference.pdf)
+    [firebird-50-language-reference-ru.pdf](https://github.com/sim1984/langref50/releases/download/1.0/firebird-50-language-reference-ru.pdf)
 
 -   HTML —
-    [firebird-50-language-reference-html.zip](https://github.com/sim1984/langref50/releases/download/1.0/firebird-50-language-reference-html.zip)
+    [firebird-50-language-reference-ru-html.zip](https://github.com/sim1984/langref50/releases/download/1.0/firebird-50-language-reference-ru-html.zip)
 
 
     
