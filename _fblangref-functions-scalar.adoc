@@ -5334,7 +5334,7 @@ MAKE_DBKEY (<relation>, _recnum_ [, _dpnum_ [, _ppnum_]]})
 |Номер страницы указателей на данные PP.
 |===
 
-Функция `MAKE_DBKEY` создает значение `DBKEY`, используя имя или идентификатор таблицы, номер записи и, необязательно, логический номер страницы данных и страницы указателя.
+Функция `MAKE_DBKEY` создаёт значение <<fblangref-appx-supp-rdb-dbkey, `DBKEY`>>, используя имя или идентификатор таблицы, номер записи и, необязательно, логический номер страницы данных и страницы указателя.
 
 .Замечания
 [NOTE]
@@ -5398,6 +5398,7 @@ where rdb$db_key >= make_dbkey('SOMETABLE', 0, 0, 5)
   and rdb$db_key <  make_dbkey('SOMETABLE', 0, 1, 5)
 ----
 
+См. также:  <<fblangref-appx-supp-rdb-dbkey>>.
 
 [[fblangref-scalarfuncs-rdberror]]
 === `RDB$ERROR()`
