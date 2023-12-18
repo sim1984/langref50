@@ -200,13 +200,13 @@ REVOKE ADMIN ROLE
 То же самое можно сделать используя утилиту [app]``gsec`` указав параметр [parameter]``-admin`` для сохранения атрибута `RDB$ADMIN` учётной записи пользователя:
 
 [listing]
-____
+----
 ....
 gsec -add new_user -pw password -admin yes
 gsec -mo existing_user -admin yes
 gsec -mo existing_user -admin no
 ....
-____
+----
 
 [NOTE]
 ====

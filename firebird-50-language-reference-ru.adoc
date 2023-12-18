@@ -1,7 +1,7 @@
 [[fblangref]]
-= Руководство по языку SQL СУБД Firebird 5.0 RC 1
+= Руководство по языку SQL СУБД Firebird 5.0 RC 2
 Дмитрий Филиппов; Александр Карпейкин; Алексей Ковязин; Дмитрий Кузьменко; Денис Симонов; Paul Vinkenoog; Дмитрий Еманов; Mark Rotteveel
-0.907, от 30.10.2023
+0.908, от 18.12.2023
 :doctype: book
 :sectnums:
 :sectanchors:

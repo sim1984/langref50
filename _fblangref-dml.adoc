@@ -3546,7 +3546,8 @@ WITH LOCK [SKIP LOCKED]
 
 [NOTE]
 ====
-Если указаны предложения FIRST/SKIP/ROWS/OFFSET/FETCH, то блокировка записей (и "пропуск блокировок") выполняется между пропуском (SKIP/ROWS/OFFSET/FETCH) и ограничением (FIRST/ROWS/OFFSET/FETCH).
+Если предложение `SKIP LOCKED` используется совместно с FIRST/SKIP/ROWS/OFFSET/FETCH, то сначала пропускаются заблокированные записи,
+а затем применяются ограничители FIRST/SKIP/ROWS/OFFSET/FETCH к оставшимся записям.
 ====
 
 См. также: <<fblangref-dml-update-skip-locked,`UPDATE ... SKIP LOCKED`>>,
@@ -4838,7 +4839,8 @@ ROWS 20;
 
 [NOTE]
 ====
-Если указаны предложения FIRST/SKIP/ROWS/OFFSET/FETCH, то блокировка записей (и "пропуск блокировок") выполняется между пропуском (SKIP/ROWS/OFFSET/FETCH) и ограничением (FIRST/ROWS/OFFSET/FETCH).
+Если предложение `SKIP LOCKED` используется совместно с FIRST/SKIP/ROWS/OFFSET/FETCH, то сначала пропускаются заблокированные записи,
+а затем применяются ограничители FIRST/SKIP/ROWS/OFFSET/FETCH к оставшимся записям.
 ====
 
 См. также: <<fblangref-dml-select-with-lock-skip-locked,`SELECT ... SKIP LOCKED`>>,
@@ -5330,7 +5332,8 @@ DELETE FROM popgroups ROWS 5 TO 12
 
 [NOTE]
 ====
-Если указаны предложения FIRST/SKIP/ROWS/OFFSET/FETCH, то блокировка записей (и "пропуск блокировок") выполняется между пропуском (SKIP/ROWS/OFFSET/FETCH) и ограничением (FIRST/ROWS/OFFSET/FETCH).
+Если предложение `SKIP LOCKED` используется совместно с FIRST/SKIP/ROWS/OFFSET/FETCH, то сначала пропускаются заблокированные записи,
+а затем применяются ограничители FIRST/SKIP/ROWS/OFFSET/FETCH к оставшимся записям.
 ====
 
 См. также: <<fblangref-dml-select-with-lock-skip-locked,`SELECT ... SKIP LOCKED`>>,
