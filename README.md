@@ -1,4 +1,4 @@
-Language Reference for Firebird 5.0 RC 2
+Language Reference for Firebird 5.0
 =========================================
 
 Это руководство описывает язык SQL, поддерживаемый СУБД Firebird 5.0.
