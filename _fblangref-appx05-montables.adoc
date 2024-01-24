@@ -38,6 +38,9 @@
 Обращения к стеку активными запросами хранимых процедур и
 триггеров.
 
+<<fblangref-montables-compiled-statements,`MON$COMPILED_STATEMENTS`>>::
+Подготовленные к выполнению запросы и PSQL модули.
+
 <<fblangref-montables-context_variables,`MON$CONTEXT_VARIABLES`>>::
 Сведения о пользовательских контекстных переменных.
 
@@ -54,7 +57,7 @@
 Статистика на уровне записей.
 
 <<fblangref-montables-statements,`MON$STATEMENTS`>>::
-Подготовленные к выполнению операторы.
+Выполняемые запросы.
 
 <<fblangref-montables-table_stats,`MON$TABLE_STATS`>>::
 Статистика на уровне таблиц.
