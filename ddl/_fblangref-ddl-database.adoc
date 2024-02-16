@@ -695,7 +695,7 @@ action_properties dbname employee prp_nolinger
 ====
 [source,sql]
 ----
-ALTER DATABASE SET LINGER 30;
+ALTER DATABASE SET LINGER TO 30;
 ----
 ====
 
@@ -711,7 +711,7 @@ ALTER DATABASE DROP LINGER;
 
 [source,sql]
 ----
-ALTER DATABASE SET LINGER 0;
+ALTER DATABASE SET TO LINGER 0;
 ----
 ====
 
