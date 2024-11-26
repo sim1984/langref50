@@ -313,6 +313,7 @@
 |`BIN_XOR`
 |`BIT_LENGTH`
 |`BLOB`
+|`BLOBID`
 |`BLOCK`
 |`BODY`
 |`BOOLEAN`
@@ -699,6 +700,7 @@
 |`TAN`
 |`TANH`
 |`TARGET`
+|`TEMP`
 |`TEMPORARY`
 |`THEN`
 |`TIES`

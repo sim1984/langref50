@@ -24,7 +24,7 @@ Firebird имеет небольшое количество SQL оператор
 
 
 [[fblangref-transaction-set_transaction]]
-== `SET TRANSACTION`
+== SET TRANSACTION
 
 .Назначение
 Задаёт параметры транзакции и стартует её.
@@ -45,6 +45,7 @@ SET TRANSACTION
    | [NO] WAIT
    | [ISOLATION LEVEL] <isolation level>
    | NO AUTO UNDO
+   | AUTO RELEASE TEMP BLOBID
    | RESTART REQUESTS
    | IGNORE LIMBO
    | LOCK TIMEOUT _seconds_
@@ -171,7 +172,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
 Существуют два режима разрешения блокировок: `WAIT` и `NO WAIT`.
 
 [[fblangref-transaction-set_transaction_wait_mode]]
-===== Режим `WAIT`
+===== Режим WAIT
 
 (((SET TRANSACTION, WAIT)))
 В режиме `WAIT` (режим по умолчанию) при появлении конфликта с параллельными транзакциями, выполняющими конкурирующие обновления данных в той же базе данных, такая транзакция будет ожидать завершения конкурирующей транзакции путём её подтверждения (`COMMIT`) или отката (`ROLLBACK`). Иными словами, клиентское приложение будет переведено в режим ожидания до момента разрешения конфликта.
@@ -184,7 +185,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
 В Firebird API режиму `WAIT` соответствует константа `isc_tpb_wait`.
 
 [[fblangref-transaction-set_transaction_no_wait_mode]]
-===== Режим `NO WAIT`
+===== Режим NO WAIT
 
 (((SET TRANSACTION, NO WAIT)))
 Если установлен режим разрешения блокировок `NO WAIT`, то при появлении конфликта блокировки данная транзакция немедленно вызовет исключение базы данных.
@@ -198,7 +199,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
 ====
 
 [[fblangref-transaction-set_transaction_isolation_level]]
-==== `ISOLATION LEVEL`
+==== ISOLATION LEVEL
 
 (((SET TRANSACTION, ISOLATION LEVEL)))
 Уровень изолированности транзакций -- значение, определяющее уровень, при котором в транзакции допускаются несогласованные данные, то есть степень изолированности одной транзакции от другой.
@@ -232,7 +233,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
 В Firebird API режиму изолированности `SNAPSHOT` соответствует константа `isc_tpb_concurrency`.
 
 [[fblangref-transaction-isolation_level_snapshot_atnumber]]
-====== Предложение `AT NUMBER`
+====== Предложение AT NUMBER
 
 (((SET TRANSACTION, SNAPSHOT, AT NUMBER)))
 Транзакцию с уровнем изолированности `SNAPSHOT` можно запустить на основе другой транзакции, если известен номер её снимка.
@@ -292,7 +293,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 В Firebird API режиму изолированности `READ COMMITTED` соответствует константа `isc_tpb_read_committed`.
 
 [[fblangref-transaction-isolation_level_read_commited_record_version]]
-====== `RECORD_VERSION`
+====== RECORD_VERSION
 
 (((SET TRANSACTION, READ COMMITTED, RECORD_VERSION))) (((SET TRANSACTION, READ COMMITTED, NO RECORD_VERSION)))
 Для этого уровня изолированности можно указать один из двух значений дополнительной характеристики в зависимости от желаемого способа разрешения конфликтов: `RECORD_VERSION` и `NO RECORD_VERSION`.
@@ -320,7 +321,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 ====
 
 [[fblangref-transaction-isolation_level_read_commited_read_consistency]]
-====== `READ CONSISTENCY`
+====== READ CONSISTENCY
 
 (((SET TRANSACTION, READ COMMITTED, READ CONSISTENCY)))
 Если указана эта опция, то транзакция с режимом изолированности `READ COMMITED` делает стабильный снимок базы данных на время выполнения оператора.
@@ -365,7 +366,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 ====
 
 [[fblangref-transaction-no_auto_undo]]
-==== `NO AUTO UNDO`
+==== NO AUTO UNDO
 
 (((SET TRANSACTION, NO AUTO UNDO)))
 При использовании опции `NO AUTO UNDO` оператор `ROLLBACK` только помечает транзакцию как отменённую без удаления созданных в этой транзакции версий, которые будут удалены позднее в соответствии с выбранной политикой сборки мусора (см. параметр `GCPolicy` в [path]_firebird.conf_).
@@ -375,11 +376,17 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 Для транзакций, в рамках которых не выполняется никаких изменений, опция `NO AUTO UNDO` игнорируется.
 
 [[fblangref-transaction-ignore_limbo]]
-==== `IGNORE LIMBO`
+==== IGNORE LIMBO
 
 (((SET TRANSACTION, IGNORE LIMBO)))
 При указании опции `IGNORE LIMBO` игнорируются записи, создаваемые "`потерянными`" (т.е.
 не завершёнными) транзакциями (limbo transaction). Транзакции считается "`потерянной`", если не завершён второй этап двухфазного подтверждения (two-phase commit).
+
+[[fblangref-transaction-auto_release_temp_blob_id]]
+==== AUTO RELEASE TEMP BLOBID
+(((SET TRANSACTION, AUTO RELEASE TEMP BLOBID)))
+
+При указании опции `AUTO RELEASE TEMP BLOBID` транзакция освободит временный идентификатор пользовательского BLOB сразу после его материализации. Это полезно для массовых вставок записей с пользовательскими BLOB, поскольку это устраняет накладные расходы памяти, вызванные созданием и сохранением временных идентификаторов до завершения транзакции. Эту опцию следует использовать с осторожностью и только если нет необходимости получать доступ к материализованному BLOB через временный идентификатор, полученный после его создания. Она используется во время восстановления базы данных.
 
 [[fblangref-transaction-auto_commit]]
 ==== AUTO COMMIT
@@ -476,7 +483,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 <<fblangref-transaction-commit,COMMIT>>, <<fblangref-transaction-rollback,ROLLBACK>>. 
 
 [[fblangref-transaction-commit]]
-== `COMMIT`
+== COMMIT
 
 .Назначение
 Подтверждение транзакции.
@@ -543,7 +550,7 @@ COMMIT [WORK] [TRANSACTION _tr_name_]
 <<fblangref-transaction-set_transaction,SET TRANSACTION>>, <<fblangref-transaction-rollback,ROLLBACK>>. 
 
 [[fblangref-transaction-rollback]]
-== `ROLLBACK`
+== ROLLBACK
 
 .Назначение
 Откат транзакции.
@@ -604,7 +611,7 @@ ROLLBACK [WORK] [TRANSACTION _tr_name_]
 <<fblangref-transaction-set_transaction,SET TRANSACTION>>, <<fblangref-transaction-commit,COMMIT>>. 
 
 [[fblangref-transaction-rollback_to_savepoint]]
-=== `ROLLBACK TO SAVEPOINT`
+=== ROLLBACK TO SAVEPOINT
 
 (((ROLLBACK, ROLLBACK TO SAVEPOINT)))
 Необязательное предложение `TO SAVEPOINT` в операторе `ROLLBACK` задаёт имя точки сохранения, на которую происходит откат.
@@ -620,7 +627,7 @@ ROLLBACK [WORK] [TRANSACTION _tr_name_]
 <<fblangref-transaction-savepoint,SAVEPOINT>>. 
 
 [[fblangref-transaction-savepoint]]
-== `SAVEPOINT`
+== SAVEPOINT
 
 .Назначение
 Создание точки сохранения.
