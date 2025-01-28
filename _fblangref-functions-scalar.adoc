@@ -3190,7 +3190,7 @@ FIRST_DAY(OF <period> FROM _date_or_timestamp_)
 ^| Описание
 
 |date_or_timestamp
-|Выражение типа `DATE` или `TIMESTAMP [WITH | WITHOUT] TIME ZONE`.
+|Выражение типа `DATE` или `TIMESTAMP [WITH \| WITHOUT] TIME ZONE`.
 |===
 
 .Тип возвращаемого результата
@@ -3243,7 +3243,7 @@ LAST_DAY(OF <period> FROM _date_or_timestamp_)
 ^| Описание
 
 |date_or_timestamp
-|Выражение типа `DATE` или `TIMESTAMP [WITH | WITHOUT] TIME ZONE`.
+|Выражение типа `DATE` или `TIMESTAMP [WITH \| WITHOUT] TIME ZONE`.
 |===
 
 .Тип возвращаемого результата
