@@ -1524,8 +1524,7 @@ WHILE (<condition>) DO
 |Составной оператор (оператор или блок операторов).
 |===
 
-Оператор `WHILE` используется для организации циклов в PSQL.
-Составной оператор будет выполняться до тех пор, пока условие истинно (возвращает TRUE). Циклы могут быть вложенными, глубина вложения не ограничена.
+Оператор `WHILE` используется для организации циклов в PSQL. Составной оператор будет выполняться до тех пор, пока условие истинно (возвращает `TRUE`). Циклы могут быть вложенными, глубина вложения не ограничена.
 
 [[fblangref-psql-while-exmpl]]
 ==== Примеры `WHILE ... DO`
@@ -1567,7 +1566,7 @@ S
 ====
 
 .См. также:
-<<fblangref-psql-statements-forselect,FOR SELECT>>, <<fblangref-psql-statements-forexec,FOR EXECUTE STATEMENT>>, <<fblangref-psql-statements-leave,LEAVE>>, <<fblangref-psql-statements-continue,CONTINUE>>.
+<<fblangref-psql-statements-leave,LEAVE>>, <<fblangref-psql-statements-continue,CONTINUE>>.
 
 [[fblangref-psql-statements-break]]
 === `BREAK`
@@ -1606,8 +1605,7 @@ END
 |Логическое условие возвращающее TRUE, FALSE или UNKNOWN.
 |===
 
-Оператор `BREAK` моментально прекращает работу внутреннего цикла операторов `WHILE` или `FOR`.
-Код продолжает выполняться с первого оператора после завершенного блока цикла.
+Оператор `BREAK` моментально прекращает работу внутреннего цикла операторов `WHILE` или `FOR`. Код продолжает выполняться с первого оператора после завершенного блока цикла.
 
 Оператор `BREAK` похож на `LEAVE`, за исключением того, что не поддерживает метку перехода.
 
@@ -1664,9 +1662,7 @@ END
 |Логическое условие возвращающее TRUE, FALSE или UNKNOWN.
 |===
 
-Оператор `LEAVE` немедленно прекращает работу внутреннего цикла операторов WHILE или FOR.
-С использованием необязательного параметра _label_, `LEAVE` также может выйти и из внешнего цикла, то есть цикла помеченного меткой `.
-Код продолжает выполняться с первого оператора после завершенного блока цикла.
+Оператор `LEAVE` немедленно прекращает работу внутреннего цикла операторов `WHILE` или `FOR`. С использованием необязательного параметра _label_, `LEAVE` также может выйти и из внешнего цикла, то есть цикла помеченного меткой `_label_`. Код продолжает выполняться с первого оператора после завершенного блока цикла.
 
 [[fblangref-psql-leave-exmpl]]
 ==== Примеры `LEAVE`
@@ -1796,6 +1792,35 @@ DO BEGIN
   ELSE
     /* do stuff */
   ...
+END
+----
+====
+
+.Использование оператора `CONTINUE` с меткой
+[example]
+====
+[source,sql]
+----
+EXECUTE BLOCK RETURNS (out INTEGER)
+AS
+    DECLARE i INTEGER;
+BEGIN
+    out = 0;
+
+    outer_while: 
+    WHILE (out <= 8) DO
+    BEGIN
+        out = out + 1;
+
+        i = 0;
+        WHILE (i <= 5) DO
+        BEGIN
+            i = i + 1;
+            IF (i = 3) THEN
+                CONTINUE outer_while;
+            suspend;
+        END
+    END
 END
 ----
 ====
@@ -2358,9 +2383,7 @@ DO <compound_statement>
 |===
 
 Оператор `FOR SELECT` выбирает очередную строку из таблицы (представления, селективной хранимой процедуры), после чего выполняется составной оператор.
-В каждой итерации цикла значения полей текущей строки копируются в локальные переменные.
-Добавление предложения `AS CURSOR` делает возможным позиционное удаление и обновление данных.
-Операторы `FOR SELECT` могут быть вложенными.
+В каждой итерации цикла значения полей текущей строки копируются в локальные переменные. Добавление предложения `AS CURSOR` делает возможным позиционное удаление и обновление данных. Операторы `FOR SELECT` могут быть вложенными.
 
 Оператор `FOR SELECT` может содержать именованные параметры, которые должны быть предварительно объявлены в операторе `DECLARE VARIABLE`, или во входных (выходных) параметрах процедуры (PSQL блока).
 
@@ -2560,6 +2583,8 @@ END
 
 .См. также:
 <<fblangref-dml-select,SELECT>>,
+<<fblangref-psql-statements-leave,LEAVE>>, 
+<<fblangref-psql-statements-continue,CONTINUE>>,
 <<fblangref-psql-statements-declare-cursor,DECLARE ...CURSOR>>,
 <<fblangref-psql-statements-open,OPEN>>,
 <<fblangref-psql-statements-close,CLOSE>>,
@@ -2633,7 +2658,9 @@ END
 ====
 
 .См. также:
-<<fblangref-psql-statements-execstmt,EXECUTE STATEMENT>>.
+<<fblangref-psql-statements-execstmt,EXECUTE STATEMENT>>,
+<<fblangref-psql-statements-leave,LEAVE>>, 
+<<fblangref-psql-statements-continue,CONTINUE>>.
 
 [[fblangref-psql-statements-open]]
 === `OPEN`
