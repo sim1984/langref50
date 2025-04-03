@@ -1001,7 +1001,7 @@ PSQL
   DECLARE PROCEDURE _subprocname_ [(<input-parameters>)]
   [RETURNS (<output-parameters>)];
 
-<subproc-implimentation> ::=
+<subproc-implementation> ::=
   DECLARE PROCEDURE _subprocname_ [(<input-parameters>)]
   [RETURNS (<output-parameters>)]
   <psql-routine-body>
@@ -1162,7 +1162,7 @@ PSQL
   DECLARE FUNCTION _subfuncname_ [(<input-parameters>)]
   RETURNS <type> [COLLATE _collation_] [DETERMINISTIC];
 
-<subfunc-implimentation> ::=
+<subfunc-implementation> ::=
   DECLARE FUNCTION _subfuncname_ [(<input-parameters>)]
   RETURNS <type> [COLLATE _collation_] [DETERMINISTIC]
   <psql-routine-body>
