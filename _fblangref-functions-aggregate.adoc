@@ -1,11 +1,9 @@
 [[fblangref-aggfuncs]]
 = Агрегатные функции
 
-((Агрегатные функции)) выполняют вычисление на наборе значений и возвращают одиночное значение.
-Агрегатные функции, за исключением COUNT, не учитывают значения NULL.
-Агрегатные функции часто используются совместно с предложением GROUP BY.
+((Агрегатные функции)) выполняют вычисление на наборе значений и возвращают одиночное значение. За исключением функции `COUNT`, они не учитывают значения `NULL`. Они часто используются совместно с предложением `GROUP BY`.
 
-Агрегатные функции могут быть использованы в качестве выражений только в следующих случаях: 
+Агрегатные функции могут быть использованы в качестве выражений только в следующих случаях:
 
 * Список выбора инструкции SELECT (вложенный или внешний запрос);
 * Предложение HAVING.
@@ -68,12 +66,12 @@ SUM(CASE WHEN <condition> THEN 1 END)
 ====
 [source,sql]
 ----
-SELECT 
+SELECT
   invoice_year,
   SUM(revenue) FILTER (WHERE invoice_month = 1) AS jan_revenue,
   SUM(revenue) FILTER (WHERE invoice_month= 2) AS feb_revenue,
   ...
-  SUM(revenue) FILTER (WHERE invoice_month = 12) AS dec_revenue 
+  SUM(revenue) FILTER (WHERE invoice_month = 12) AS dec_revenue
 FROM (
   SELECT
     EXTRACT(YEAR FROM invoices.invoice_date) AS invoice_year,
@@ -133,7 +131,7 @@ AVG([ALL | DISTINCT] <expr>)
 ====
 [source,sql]
 ----
-SELECT 
+SELECT
   dept_no,
   AVG(salary)
 FROM employee
@@ -191,7 +189,7 @@ COUNT([ALL | DISTINCT] <expr> | *)
 ====
 [source,sql]
 ----
-SELECT 
+SELECT
   dept_no,
   COUNT(*) AS cnt,
   COUNT(DISTINCT name) AS cnt_name
@@ -263,7 +261,7 @@ LIST([ALL | DISTINCT] <expr> [, _separator_])
 
 [source,sql]
 ----
-SELECT LIST (display_name, '; ') 
+SELECT LIST (display_name, '; ')
 FROM GR_WORK;
 ----
 ====
@@ -275,9 +273,9 @@ FROM GR_WORK;
 
 [source,sql]
 ----
-SELECT LIST (display_name, '; ') 
-FROM (SELECT display_name 
-      FROM GR_WORK 
+SELECT LIST (display_name, '; ')
+FROM (SELECT display_name
+      FROM GR_WORK
       ORDER BY display_name);
 ----
 ====
@@ -333,7 +331,7 @@ MAX([ALL | DISTINCT] <expr>)
 ====
 [source,sql]
 ----
-SELECT 
+SELECT
   dept_no,
   MAX(salary)
 FROM employee
@@ -392,7 +390,7 @@ MIN([ALL | DISTINCT] <expr>)
 ====
 [source,sql]
 ----
-SELECT 
+SELECT
   dept_no,
   MIN(salary)
 FROM employee
@@ -447,7 +445,7 @@ SUM([ALL | DISTINCT] <expr>)
 ====
 [source,sql]
 ----
-SELECT 
+SELECT
   dept_no,
   SUM(salary)
 FROM employee
@@ -563,7 +561,7 @@ COVAR_POP(<expr1>, <expr2>)
 
 [listing]
 ----
-(SUM(<expr1> * <expr2>) - SUM(<expr1>) * SUM(<expr2>) / COUNT(*)) 
+(SUM(<expr1> * <expr2>) - SUM(<expr1>) * SUM(<expr2>) / COUNT(*))
   / COUNT(*)
 ----
 
@@ -584,7 +582,7 @@ FROM measure
 ====
 
 .См. также:
-<<fblangref-aggfuncs-covar-samp>>, <<fblangref-aggfuncs-sum>>, <<fblangref-aggfuncs-count>>. 
+<<fblangref-aggfuncs-covar-samp>>, <<fblangref-aggfuncs-sum>>, <<fblangref-aggfuncs-count>>.
 
 [[fblangref-aggfuncs-covar-samp]]
 === `COVAR_SAMP()`
@@ -621,7 +619,7 @@ COVAR_SAMP(<expr1>, <expr2>)
 
 [listing]
 ----
-(SUM(<expr1> * <expr2>) - SUM(<expr1>) * SUM(<expr2>) / COUNT(*)) 
+(SUM(<expr1> * <expr2>) - SUM(<expr1>) * SUM(<expr2>) / COUNT(*))
   / (COUNT(*) - 1)
 ----
 
@@ -693,7 +691,7 @@ SQRT(VAR_POP(<expr>))
 ====
 [source,sql]
 ----
-SELECT 
+SELECT
   dept_no,
   STDDEV_POP(salary)
 FROM employee
@@ -746,14 +744,14 @@ SQRT(VAR_SAMP(<expr>))
 В случае если выборка записей пустая, содержит только 1 запись или содержит только значения `NULL`, результат будет содержать `NULL`.
 
 [[fblangref-aggfuncs-stddev-samp-exmpl]]
-==== Примеры `STDDEV_SAMP` 
+==== Примеры `STDDEV_SAMP`
 
 .Использование функции `STDDEV_SAMP`
 [example]
 ====
 [source,sql]
 ----
-SELECT 
+SELECT
   dept_no,
   STDDEV_SAMP(salary)
 FROM employee
@@ -800,7 +798,7 @@ VAR_POP(<expr>)
 
 [listing]
 ----
-(SUM(<expr> * <expr>) - SUM(<expr>) * SUM(<expr>) / COUNT(<expr>)) 
+(SUM(<expr> * <expr>) - SUM(<expr>) * SUM(<expr>) / COUNT(<expr>))
   / COUNT(<expr>)
 ----
 
@@ -814,7 +812,7 @@ VAR_POP(<expr>)
 ====
 [source,sql]
 ----
-SELECT 
+SELECT
   dept_no,
   VAR_POP(salary)
 FROM employee
@@ -861,7 +859,7 @@ VAR_SAMP(<expr>)
 
 [listing]
 ----
-(SUM(<expr> * <expr>) - SUM(<expr>) * SUM(<expr>) / COUNT(<expr>)) 
+(SUM(<expr> * <expr>) - SUM(<expr>) * SUM(<expr>) / COUNT(<expr>))
   / (COUNT(<expr>) - 1)
 ----
 
@@ -875,7 +873,7 @@ VAR_SAMP(<expr>)
 ====
 [source,sql]
 ----
-SELECT 
+SELECT
   dept_no,
   VAR_SAMP(salary)
 FROM employee
@@ -1079,7 +1077,7 @@ REGR_INTERCEPT(<y>, <x>)
 
 Функция `REGR_INTERCEPT` вычисляет точку пересечения линии регрессии с осью Y.
 
-Функция `REGR_INTERCEPT(<y>, <x>)` эквивалентна 
+Функция `REGR_INTERCEPT(<y>, <x>)` эквивалентна
 
 [listing]
 ----
@@ -1132,7 +1130,7 @@ BYYEAR     TOTAL_VALUE
 ====
 
 .См. также:
-<<fblangref-aggfuncs-regr-avgy>>, <<fblangref-aggfuncs-regr-avgx>>, <<fblangref-aggfuncs-regr-slope>>. 
+<<fblangref-aggfuncs-regr-avgy>>, <<fblangref-aggfuncs-regr-avgx>>, <<fblangref-aggfuncs-regr-slope>>.
 
 [[fblangref-aggfuncs-regr-r2]]
 === `REGR_R2()`
@@ -1221,7 +1219,7 @@ REGR_SLOPE(<y>, <x>)
 [listing]
 ----
 COVAR_POP(<y>, <x>) / VAR_POP(<exprX>)
-                        
+
 <exprX> :==
   CASE WHEN <x> IS NOT NULL AND <y> IS NOT NULL THEN <x> END
 ----
