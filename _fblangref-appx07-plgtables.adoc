@@ -5,7 +5,7 @@
 [[fblangref-appx07-plgtables]]
 = Таблицы плагинов
 
-Таблицы плагинов — это таблицы или представления, созданные для или с помощью различных плагинов для движка Firebird. Стандартные таблицы плагинов имеют префикс `PLG$` (но могут иметь и другие).
+Таблицы плагинов -- это таблицы или представления, созданные для или с помощью различных плагинов для движка Firebird. Стандартные таблицы плагинов имеют префикс `PLG$` (но могут иметь и другие).
 
 Таблицы плагинов не всегда существуют. Например, некоторые таблицы существуют только в базе данных безопасности, а другие таблицы будут созданы только при первом использовании плагина.
 
@@ -69,7 +69,7 @@
 |идентификатор курсора
 
 |NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |имя явно объявленного курсора
 
 |LINE_NUM
@@ -171,7 +171,7 @@
 |уровень отступа для источника данных. Необходим при конструировании подробного плана.
 
 |ACCESS_PATH
-|BLOB SUB_TYPE TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |описание метода доступа для источника данных
 |===
 
@@ -316,11 +316,11 @@
 |идентификатор соединения для которого производится профилирование
 
 |USER_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |имя пользователя
 
 |DESCRIPTION
-|VARCHAR(255)
+|VARCHAR(255) CHARACTER SET UTF8
 |описание переданное в параметре `RDB$PROFILER.START_SESSION`
 
 |START_TIMESTAMP
@@ -359,19 +359,19 @@
 |родительский идентификатор запроса - относится к подпрограммам.
 
 |STATEMENT_TYPE
-|VARCHAR(20)
+|VARCHAR(20) CHARACTER SET UTF8
 |типа оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PACKAGE_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя пакета
 
 |ROUTINE_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя функции, процедуры или триггера
 
 |SQL_TEXT
-|BLOB SUB_TYPE TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |SQL текст для типа BLOCK
 |===
 
@@ -398,15 +398,15 @@
 |идентификатор оператора
 
 |STATEMENT_TYPE
-|VARCHAR(20)
+|VARCHAR(20) CHARACTER SET UTF8
 |типа оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PACKAGE_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя пакета
 
 |ROUTINE_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя функции, процедуры или триггера
 
 |PARENT_STATEMENT_ID
@@ -414,15 +414,15 @@
 |идентификатор родительского оператора
 
 |PARENT_STATEMENT_TYPE
-|VARCHAR(20)
+|VARCHAR(20) CHARACTER SET UTF8
 |типа родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PARENT_ROUTINE_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя родительской функции, процедуры или триггера
 
 |SQL_TEXT
-|BLOB SUB_TYPE TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |SQL текст для операторов типа BLOCK
 
 |LINE_NUM
@@ -475,15 +475,15 @@
 |идентификатор оператора
 
 |STATEMENT_TYPE
-|VARCHAR(20)
+|VARCHAR(20) CHARACTER SET UTF8
 |типа оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PACKAGE_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя пакета
 
 |ROUTINE_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя функции, процедуры или триггера
 
 |PARENT_STATEMENT_ID
@@ -491,7 +491,7 @@
 |идентификатор родительского оператора
 
 |PARENT_STATEMENT_TYPE
-|VARCHAR(20)
+|VARCHAR(20) CHARACTER SET UTF8
 |типа родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PARENT_ROUTINE_NAME
@@ -499,7 +499,7 @@
 |Имя родительской функции, процедуры или триггера
 
 |SQL_TEXT
-|BLOB SUB_TYPE TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |SQL текст для типа BLOCK
 
 |CURSOR_ID
@@ -507,7 +507,7 @@
 |идентификатор курсора
 
 |NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |имя явно объявленного курсора
 
 |CURSOR_LINE_NUM
@@ -531,7 +531,7 @@
 |уровень метода доступа. Необходим для расчёта отступов при конструировании плана.
 
 |ACCESS_PATH
-|BLOB SUB_TYPE TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |описание метода доступа для источника данных
 
 |OPEN_COUNTER
@@ -596,15 +596,15 @@
 |идентификатор оператора
 
 |STATEMENT_TYPE
-|VARCHAR(20)
+|VARCHAR(20) CHARACTER SET UTF8
 |типа оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PACKAGE_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя пакета
 
 |ROUTINE_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя функции, процедуры или триггера
 
 |PARENT_STATEMENT_ID
@@ -612,7 +612,7 @@
 |идентификатор родительского оператора
 
 |PARENT_STATEMENT_TYPE
-|VARCHAR(20)
+|VARCHAR(20) CHARACTER SET UTF8
 |типа родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PARENT_ROUTINE_NAME
@@ -620,7 +620,7 @@
 |Имя родительской функции, процедуры или триггера
 
 |SQL_TEXT
-|BLOB SUB_TYPE TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |SQL текст для типа BLOCK
 
 |COUNTER
@@ -659,7 +659,7 @@
 ^| Описание
 
 |PLG$USER_NAME
-|VARCHAR(63)
+|VARCHAR(63) CHARACTER SET UTF8
 |Имя пользователя
 
 |PLG$VERIFIER
@@ -671,23 +671,23 @@
 |Соль
 
 |PLG$COMMENT
-|BLOB SUB_TYPE TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |Текстовый комментарий
 
 |PLG$FIRST
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Первое имя (имя)
 
 |PLG$MIDDLE
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Среднее имя (отчество)
 
 |PLG$LAST
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Последнее имя (фамилия)
 
 |PLG$ATTRIBUTES
-|BLOB SUB_TYPE TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |Пользовательские аттрибуты (теги)
 
 |PLG$ACTIVE
@@ -710,7 +710,7 @@
 ^| Описание
 
 |PLG$USER_NAME
-|VARCHAR(63)
+|VARCHAR(63) CHARACTER SET UTF8
 |Имя пользователя
 
 |PLG$VERIFIER
@@ -722,23 +722,23 @@
 |Соль
 
 |PLG$COMMENT
-|BLOB SUB_TYPE TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |Текстовый комментарий
 
 |PLG$FIRST
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Первое имя (имя)
 
 |PLG$MIDDLE
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Среднее имя (отчество)
 
 |PLG$LAST
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Последнее имя (фамилия)
 
 |PLG$ATTRIBUTES
-|BLOB SUB_TYPE TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |Пользовательские аттрибуты (теги)
 
 |PLG$ACTIVE
@@ -751,17 +751,17 @@
 
 [source,sql]
 ----
-SELECT 
-  PLG$USER_NAME, 
-  PLG$VERIFIER, 
-  PLG$SALT, 
-  PLG$COMMENT, 
-  PLG$FIRST, 
-  PLG$MIDDLE, 
-  PLG$LAST, 
-  PLG$ATTRIBUTES, 
-  PLG$ACTIVE 
-FROM PLG$SRP 
+SELECT
+  PLG$USER_NAME,
+  PLG$VERIFIER,
+  PLG$SALT,
+  PLG$COMMENT,
+  PLG$FIRST,
+  PLG$MIDDLE,
+  PLG$LAST,
+  PLG$ATTRIBUTES,
+  PLG$ACTIVE
+FROM PLG$SRP
 WHERE RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) OR CURRENT_USER = PLG$SRP.PLG$USER_NAME
 ----
 
@@ -780,15 +780,15 @@ WHERE RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) OR CURRENT_USER = PLG$SRP.PLG$USER_N
 ^| Описание
 
 |PLG$USER_NAME
-|VARCHAR(63)
+|VARCHAR(63) CHARACTER SET UTF8
 |Имя пользователя
 
 |PLG$GROUP_NAME
-|VARCHAR(63)
+|VARCHAR(63) CHARACTER SET UTF8
 |Имя группы
 
 |PLG$GROUP_NAME
-|VARCHAR(63)
+|VARCHAR(63) CHARACTER SET UTF8
 |Имя группы
 
 |PLG$UID
@@ -804,19 +804,19 @@ WHERE RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) OR CURRENT_USER = PLG$SRP.PLG$USER_N
 |Хеш пароля
 
 |PLG$COMMENT
-|BLOB SUB_TYPE TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |Текстовый комментарий
 
 |PLG$FIRST_NAME
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Первое имя (имя)
 
 |PLG$MIDDLE_NAME
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Среднее имя (отчество)
 
 |PLG$LAST_NAME
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Последнее имя (фамилия)
 
 |===
@@ -824,8 +824,7 @@ WHERE RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) OR CURRENT_USER = PLG$SRP.PLG$USER_N
 [[fblangref-appx07-plgusersview]]
 === Представление `PLG$VIEW_USERS`
 
-Представление `PLG$VIEW_USERS` определяет какие пользователи доступны для просмотра через виртуальную таблицу `SEC$USERS` и
-изменения с помощью оператор `ALTER USER ...`.
+Представление `PLG$VIEW_USERS` определяет какие пользователи доступны для просмотра через виртуальную таблицу `SEC$USERS` и изменения с помощью оператор `ALTER USER ...`.
 
 .Описание столбцов представления `PLG$VIEW_USERS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
@@ -835,15 +834,15 @@ WHERE RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) OR CURRENT_USER = PLG$SRP.PLG$USER_N
 ^| Описание
 
 |PLG$USER_NAME
-|VARCHAR(63)
+|VARCHAR(63) CHARACTER SET UTF8
 |Имя пользователя
 
 |PLG$GROUP_NAME
-|VARCHAR(63)
+|VARCHAR(63) CHARACTER SET UTF8
 |Имя группы
 
 |PLG$GROUP_NAME
-|VARCHAR(63)
+|VARCHAR(63) CHARACTER SET UTF8
 |Имя группы
 
 |PLG$UID
@@ -859,19 +858,19 @@ WHERE RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) OR CURRENT_USER = PLG$SRP.PLG$USER_N
 |Хеш пароля
 
 |PLG$COMMENT
-|BLOB SUB_TYPE TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |Текстовый комментарий
 
 |PLG$FIRST_NAME
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Первое имя (имя)
 
 |PLG$MIDDLE_NAME
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Среднее имя (отчество)
 
 |PLG$LAST_NAME
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Последнее имя (фамилия)
 
 |===
@@ -880,15 +879,15 @@ WHERE RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) OR CURRENT_USER = PLG$SRP.PLG$USER_N
 
 [source,sql]
 ----
-SELECT 
-  PLG$USER_NAME, 
-  PLG$GROUP_NAME, 
-  PLG$UID, 
-  PLG$GID, 
+SELECT
+  PLG$USER_NAME,
+  PLG$GROUP_NAME,
+  PLG$UID,
+  PLG$GID,
   PLG$PASSWD,
-  PLG$COMMENT, 
-  PLG$FIRST_NAME, 
-  PLG$MIDDLE_NAME, 
+  PLG$COMMENT,
+  PLG$FIRST_NAME,
+  PLG$MIDDLE_NAME,
   PLG$LAST_NAME
 FROM PLG$USERS
 WHERE CURRENT_USER = 'SYSDBA'
