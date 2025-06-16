@@ -495,7 +495,7 @@
 |типа родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PARENT_ROUTINE_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя родительской функции, процедуры или триггера
 
 |SQL_TEXT
@@ -616,7 +616,7 @@
 |типа родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PARENT_ROUTINE_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя родительской функции, процедуры или триггера
 
 |SQL_TEXT
