@@ -2398,7 +2398,6 @@ END
 ====
 [source,sql]
 ----
-
 SELECT 30||' days hath September, April, June and November' CONCAT$
 FROM RDB$DATABASE
 ----
@@ -2442,6 +2441,7 @@ SELECT
   (LOCALTIMESTAMP = CURRENT_TIMESTAMP) AS V
 FROM RDB$DATABASE;
 ----
+====
 
 [[fblangref-datatypes-domain]]
 == Пользовательские типы данных -- домены
