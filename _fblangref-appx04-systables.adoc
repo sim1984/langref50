@@ -2444,10 +2444,11 @@ M -- membership (членство).
 
 |RDB$GRANT_OPTION
 |SMALLINT
-|Содержит ли полномочие авторизацию `WITH GRANT OPTION`:
+|Содержит ли полномочие `WITH {GRANT | ADMIN} OPTION`:
 
-0 – не содержит; +
-1 – содержит.
+0 - не содержит; +
+1 - WITH GRANT OPTION; +
+2 - WITH ADMIN OPTION.
 
 |RDB$RELATION_NAME
 |CHAR(63) CHARACTER SET UTF8
