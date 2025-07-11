@@ -2333,7 +2333,6 @@
 `AFTER DROP TRIGGER OR DROP DOMAIN` -- `0x00000000001005001`
 ----
 
-
 [[fblangref-systables-types]]
 == `RDB$TYPES`
 
