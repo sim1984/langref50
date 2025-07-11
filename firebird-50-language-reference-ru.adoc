@@ -19,7 +19,7 @@ ifdef::backend-html5[]
 endif::[]
 :imagesdir: ../../images
 include::../../attributes-ru.adoc[]
-:fb-full-version: 5.0.2
+:fb-full-version: 5.0.3
 :secdb: security5.fdb
 
 Авторские права (C) 2017-2025 Firebird Project и всех участвующих авторов на https://www.firebirdsql.org/manual/pdl.html[Public Documentation License Version 1.0].
