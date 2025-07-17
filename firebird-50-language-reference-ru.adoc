@@ -17,7 +17,7 @@ endif::[]
 ifdef::backend-html5[]
 :source-highlighter: highlight.js
 endif::[]
-:imagesdir: ../../images
+:imagesdir: images
 include::../../attributes-ru.adoc[]
 :fb-full-version: 5.0.3
 :secdb: security5.fdb
