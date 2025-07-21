@@ -683,8 +683,8 @@ ALTER DATABASE ENCRYPT WITH DbCrypt;
 ====
 
 .Дешифрование базы данных
-====
 [example]
+====
 [source,sql]
 ----
 ALTER DATABASE DECRYPT;
