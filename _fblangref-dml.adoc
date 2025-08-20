@@ -4325,7 +4325,7 @@ UPDATE _target_ [[AS] _alias_]
 
 <upd_value> ::= <value_expression> | DEFAULT
 
-<returning_list> ::= * | <output_column> [, <output_column]
+<returning_list> ::= * | <output_column> [, <output_column>]
 
 <output_column> ::=
     _target_.* | NEW.* | OLD.*
@@ -4713,7 +4713,7 @@ UPDATE OR INSERT INTO
 
 <ins_value> ::= <value_expression> | DEFAULT
 
-<returning_list> ::= * | <output_column> [, <output_column]
+<returning_list> ::= * | <output_column> [, <output_column>]
 
 <output_column> ::=
     _target_.* | NEW.* | OLD.*
@@ -4863,7 +4863,7 @@ DELETE
   [SKIP LOCKED]
   [RETURNING <returning_list> [INTO <variables>]]
 
-<returning_list> ::= * | <output_column> [, <output_column]
+<returning_list> ::= * | <output_column> [, <output_column>]
 
 <output_column> ::=
     _target_.*
@@ -5230,7 +5230,7 @@ MERGE
 
 <returning clause> ::= RETURNING <returning_list> [INTO <variable_list>]
 
-<returning_list> ::= * | <output_column> [, <output_column]
+<returning_list> ::= * | <output_column> [, <output_column>]
 
 <output_column> ::=
     _target_.* | NEW.* | OLD.*
