@@ -495,12 +495,12 @@ FROM <table-reference> [, <table-reference> ...]
 ----
 SELECT id, name, sex, age
 FROM actors
-WHERE state = 'Ohio'
+WHERE state = 'Ohio';
 
 SELECT *
 FROM birds
 WHERE type = 'flightless'
-ORDER BY family, genus, species
+ORDER BY family, genus, species;
 
 SELECT
   firstname,
@@ -510,7 +510,7 @@ SELECT
   (SELECT name FROM schools s WHERE p.school = s.id) schoolname
 FROM pupils p
 WHERE year_started = 2012
-ORDER BY schoolname, date_of_birth
+ORDER BY schoolname, date_of_birth;
 ----
 
 [IMPORTANT]
@@ -522,16 +522,16 @@ ORDER BY schoolname, date_of_birth
 [source,sql]
 ----
 SELECT PEARS
-FROM FRUIT
+FROM FRUIT;
 
 SELECT FRUIT.PEARS
-FROM FRUIT
+FROM FRUIT;
 
 SELECT PEARS
-FROM FRUIT F
+FROM FRUIT F;
 
 SELECT F.PEARS
-FROM FRUIT F
+FROM FRUIT F;
 ----
 
 Некорректное использование:
@@ -581,10 +581,10 @@ _Однако если параметры задаются частично, т�
 [source,sql]
 ----
 SELECT name, az, alt
-FROM visible_stars('Brugge', current_date, '22:30')
+FROM visible_stars('Brugge', current_date, '22:30');
 
 SELECT name, az, alt
-FROM visible_stars('Brugge', current_date, '22:30', 4.0)
+FROM visible_stars('Brugge', current_date, '22:30', 4.0);
 ----
 
 А вот этот запрос не будет корректным:
@@ -4154,7 +4154,7 @@ WHERE Accepted = 1
 UNION ALL
 SELECT number, name
 FROM SuspendedMembers
-WHERE Vindicated = 1
+WHERE Vindicated = 1;
 
 INSERT INTO numbers(num)
 WITH RECURSIVE r(n) AS (
@@ -4162,7 +4162,7 @@ WITH RECURSIVE r(n) AS (
   UNION ALL
   SELECT n+1 FROM r where n < 100
 )
-SELECT n FROM r
+SELECT n FROM r;
 ----
 ====
 
@@ -5159,7 +5159,7 @@ delete from emails_queue
 ----
 DELETE FROM Scholars
 WHERE first_name = 'Henry' AND last_name = 'Higgins'
-RETURNING last_name, fullname, id
+RETURNING last_name, fullname, id;
 
 DELETE FROM Dumbbells
 ORDER BY iq DESC
@@ -5405,7 +5405,7 @@ USING (
   FROM EMPLOYEE
   WHERE DEPT_NO = 120) EMP
 ON SALARY_HISTORY.EMP_NO = EMP.EMP_NO
-WHEN MATCHED THEN DELETE
+WHEN MATCHED THEN DELETE;
 ----
 ====
 
