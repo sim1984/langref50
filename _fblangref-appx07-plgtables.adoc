@@ -58,30 +58,30 @@
 
 |PROFILE_ID
 |BIGINT
-|идентификатор сессии профилирования
+|Идентификатор сессии профилирования
 
 |STATEMENT_ID
 |BIGINT
-|идентификатор оператора
+|Идентификатор оператора
 
 |CURSOR_ID
 |BIGINT
-|идентификатор курсора
+|Идентификатор курсора
 
 |NAME
 |CHAR(63) CHARACTER SET UTF8
-|имя явно объявленного курсора
+|Имя явно объявленного курсора
 
 |LINE_NUM
 |INTEGER
-|номер строки PSQL в которой определён курсор
+|Номер строки PSQL в которой определён курсор
 
 |COLUMN_NUM
 |INTEGER
-|номер столбца PSQL в котором определён курсор
+|Номер столбца PSQL в котором определён курсор
 |===
 
- Первичный ключ `PROFILE_ID, STATEMENT_ID, CURSOR_ID`
+Первичный ключ `PROFILE_ID, STATEMENT_ID, CURSOR_ID`.
 
 [[fblangref-appx07-profpsqlstats]]
 === Таблица `PLG$PROF_PSQL_STATS`
@@ -97,27 +97,27 @@
 
 |PROFILE_ID
 |BIGINT
-|идентификатор сессии профилирования
+|Идентификатор сессии профилирования
 
 |STATEMENT_ID
 |BIGINT
-|идентификатор оператора
+|Идентификатор оператора
 
 |REQUEST_ID
 |BIGINT
-|идентификатор запроса
+|Идентификатор запроса
 
 |LINE_NUM
 |INTEGER
-|номер строки в PSQL для оператора
+|Номер строки в PSQL для оператора
 
 |COLUMN_NUM
 |INTEGER
-|номер столбца в PSQL для оператора
+|Номер столбца в PSQL для оператора
 
 |COUNTER
 |BIGINT
-|количество выполнений для номера строки/столбца
+|Количество выполнений для номера строки/столбца
 
 |MIN_ELAPSED_TIME
 |BIGINT
@@ -148,34 +148,34 @@
 
 |PROFILE_ID
 |BIGINT
-|идентификатор сессии профилирования
+|Идентификатор сессии профилирования
 
 |STATEMENT_ID
 |BIGINT
-|идентификатор оператора
+|Идентификатор оператора
 
 |CURSOR_ID
 |BIGINT
-|идентификатор курсора
+|Идентификатор курсора
 
 |RECORD_SOURCE_ID
 |BIGINT
-|идентификатор источника данных
+|Идентификатор источника данных
 
 |PARENT_RECORD_SOURCE_ID
 |BIGINT
-|идентификатор родительского источника данных
+|Идентификатор родительского источника данных
 
 |LEVEL
 |INTEGER
-|уровень отступа для источника данных. Необходим при конструировании подробного плана.
+|Уровень отступа для источника данных. Необходим при конструировании подробного плана.
 
 |ACCESS_PATH
 |BLOB SUB_TYPE TEXT CHARACTER SET UTF8
-|описание метода доступа для источника данных
+|Описание метода доступа для источника данных
 |===
 
-Первичный ключ: `PROFILE_ID, STATEMENT_ID, CURSOR_ID, RECORD_SOURCE_ID`
+Первичный ключ: `PROFILE_ID, STATEMENT_ID, CURSOR_ID, RECORD_SOURCE_ID`.
 
 [[fblangref-appx07-profrecordsourcesstats]]
 === Таблица `PLG$PROF_RECORD_SOURCE_STATS`
@@ -191,27 +191,27 @@
 
 |PROFILE_ID
 |BIGINT
-|идентификатор сессии профилирования
+|Идентификатор сессии профилирования
 
 |STATEMENT_ID
 |BIGINT
-|идентификатор оператора
+|Идентификатор оператора
 
 |REQUEST_ID
 |BIGINT
-|идентификатор запроса
+|Идентификатор запроса
 
 |CURSOR_ID
 |BIGINT
-|идентификатор курсора
+|Идентификатор курсора
 
 |RECORD_SOURCE_ID
 |BIGINT
-|идентификатор источника данных
+|Идентификатор источника данных
 
 |OPEN_COUNTER
 |BIGINT
-|количество открытий источника данных
+|Количество открытий источника данных
 
 |OPEN_MIN_ELAPSED_TIME
 |BIGINT
@@ -242,7 +242,7 @@
 |Накопленное время извлечения записей из источника данных (в наносекундах)
 |===
 
-Первичный ключ: `PROFILE_ID, STATEMENT_ID, REQUEST_ID, CURSOR_ID, RECORD_SOURCE_ID`
+Первичный ключ: `PROFILE_ID, STATEMENT_ID, REQUEST_ID, CURSOR_ID, RECORD_SOURCE_ID`.
 
 [[fblangref-appx07-profrequests]]
 === Таблица `PLG$PROF_REQUESTS`
@@ -262,31 +262,31 @@
 
 |PROFILE_ID
 |BIGINT
-|идентификатор сессии профилирования
+|Идентификатор сессии профилирования
 
 |STATEMENT_ID
 |BIGINT
-|идентификатор SQL оператора
+|Идентификатор SQL оператора
 
 |REQUEST_ID
 |BIGINT
-|идентификатор запроса
+|Идентификатор запроса
 
 |CALLER_STATEMENT_ID
 |BIGINT
-|идентификатор SQL оператора
+|Идентификатор SQL оператора
 
 |CALLER_REQUEST_ID
 |BIGINT
-|идентификатор вызывающего запроса
+|Идентификатор вызывающего запроса
 
 |START_TIMESTAMP
 |TIMESTAMP WITH TIME ZONE
-|момент старта запроса
+|Момент старта запроса
 
 |FINISH_TIMESTAMP
 |TIMESTAMP WITH TIME ZONE
-|момент завершения запроса
+|Момент завершения запроса
 
 |TOTAL_ELAPSED_TIME
 |BIGINT
@@ -309,30 +309,30 @@
 
 |PROFILE_ID
 |BIGINT
-|идентификатор сессии профилирования
+|Идентификатор сессии профилирования
 
 |ATTACHMENT_ID
 |BIGINT
-|идентификатор соединения для которого производится профилирование
+|Идентификатор соединения для которого производится профилирование
 
 |USER_NAME
 |CHAR(63) CHARACTER SET UTF8
-|имя пользователя
+|Имя пользователя
 
 |DESCRIPTION
 |VARCHAR(255) CHARACTER SET UTF8
-|описание переданное в параметре `RDB$PROFILER.START_SESSION`
+|Описание переданное в параметре `RDB$PROFILER.START_SESSION`
 
 |START_TIMESTAMP
 |TIMESTAMP WITH TIME ZONE
-|момент начала сессии профилирования
+|Момент начала сессии профилирования
 
 |FINISH_TIMESTAMP
 |TIMESTAMP WITH TIME ZONE
-|момент окончания сессии профилирования (NULL если сессия не завершена)
+|Момент окончания сессии профилирования (NULL если сессия не завершена)
 |===
 
-Первичный ключ: `PROFILE_ID`
+Первичный ключ: `PROFILE_ID`.
 
 [[fblangref-appx07-profstatements]]
 === Таблица `PLG$PROF_STATEMENTS`
@@ -348,19 +348,19 @@
 
 |PROFILE_ID
 |BIGINT
-|идентификатор сессии профилирования
+|Идентификатор сессии профилирования
 
 |STATEMENT_ID
 |BIGINT
-|идентификатор оператора
+|Идентификатор оператора
 
 |PARENT_STATEMENT_ID
 |BIGINT
-|родительский идентификатор запроса - относится к подпрограммам.
+|Родительский идентификатор запроса - относится к подпрограммам.
 
 |STATEMENT_TYPE
 |VARCHAR(20) CHARACTER SET UTF8
-|типа оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
+|Тип оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PACKAGE_NAME
 |CHAR(63) CHARACTER SET UTF8
@@ -375,7 +375,7 @@
 |SQL текст для типа BLOCK
 |===
 
-Первичный ключ: `PROFILE_ID, STATEMENT_ID`
+Первичный ключ: `PROFILE_ID, STATEMENT_ID`.
 
 [[fblangref-appx07-profpsqlstatsview]]
 === Представление `PLG$PROF_PSQL_STATS_VIEW`
@@ -391,15 +391,15 @@
 
 |PROFILE_ID
 |BIGINT
-|идентификатор сессии профилирования
+|Идентификатор сессии профилирования
 
 |STATEMENT_ID
 |BIGINT
-|идентификатор оператора
+|Идентификатор оператора
 
 |STATEMENT_TYPE
 |VARCHAR(20) CHARACTER SET UTF8
-|типа оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
+|Тип оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PACKAGE_NAME
 |CHAR(63) CHARACTER SET UTF8
@@ -411,11 +411,11 @@
 
 |PARENT_STATEMENT_ID
 |BIGINT
-|идентификатор родительского оператора
+|Идентификатор родительского оператора
 
 |PARENT_STATEMENT_TYPE
 |VARCHAR(20) CHARACTER SET UTF8
-|типа родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
+|Тип родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PARENT_ROUTINE_NAME
 |CHAR(63) CHARACTER SET UTF8
@@ -427,15 +427,15 @@
 
 |LINE_NUM
 |INTEGER
-|номер строки в PSQL для оператора
+|Номер строки в PSQL для оператора
 
 |COLUMN_NUM
 |INTEGER
-|номер столбца в PSQL для оператора
+|Номер столбца в PSQL для оператора
 
 |COUNTER
 |BIGINT
-|количество выполнений для номера строки/столбца
+|Количество выполнений для номера строки/столбца
 
 |MIN_ELAPSED_TIME
 |BIGINT
@@ -468,15 +468,15 @@
 
 |PROFILE_ID
 |BIGINT
-|идентификатор сессии профилирования
+|Идентификатор сессии профилирования
 
 |STATEMENT_ID
 |BIGINT
-|идентификатор оператора
+|Идентификатор оператора
 
 |STATEMENT_TYPE
 |VARCHAR(20) CHARACTER SET UTF8
-|типа оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
+|Тип оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PACKAGE_NAME
 |CHAR(63) CHARACTER SET UTF8
@@ -488,11 +488,11 @@
 
 |PARENT_STATEMENT_ID
 |BIGINT
-|идентификатор родительского оператора
+|Идентификатор родительского оператора
 
 |PARENT_STATEMENT_TYPE
 |VARCHAR(20) CHARACTER SET UTF8
-|типа родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
+|Тип родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PARENT_ROUTINE_NAME
 |CHAR(63) CHARACTER SET UTF8
@@ -504,39 +504,39 @@
 
 |CURSOR_ID
 |BIGINT
-|идентификатор курсора
+|Идентификатор курсора
 
 |NAME
 |CHAR(63) CHARACTER SET UTF8
-|имя явно объявленного курсора
+|Имя явно объявленного курсора
 
 |CURSOR_LINE_NUM
 |INTEGER
-|номер строки в которой определён курсор
+|Номер строки в которой определён курсор
 
 |CURSOR_COLUMN_NUM
 |INTEGER
-|номер столбца в котором определён курсор
+|Номер столбца в котором определён курсор
 
 |RECORD_SOURCE_ID
 |BIGINT
-|идентификатор источника данных
+|Идентификатор источника данных
 
 |PARENT_RECORD_SOURCE_ID
 |BIGINT
-|идентификатор родительского источника данных
+|Идентификатор родительского источника данных
 
 |LEVEL
 |INTEGER
-|уровень метода доступа. Необходим для расчёта отступов при конструировании плана.
+|Уровень метода доступа. Необходим для расчёта отступов при конструировании плана.
 
 |ACCESS_PATH
 |BLOB SUB_TYPE TEXT CHARACTER SET UTF8
-|описание метода доступа для источника данных
+|Описание метода доступа для источника данных
 
 |OPEN_COUNTER
 |BIGINT
-|количество открытий источника данных
+|Количество открытий источника данных
 
 |OPEN_MIN_ELAPSED_TIME
 |BIGINT
@@ -589,15 +589,15 @@
 
 |PROFILE_ID
 |BIGINT
-|идентификатор сессии профилирования
+|Идентификатор сессии профилирования
 
 |STATEMENT_ID
 |BIGINT
-|идентификатор оператора
+|Идентификатор оператора
 
 |STATEMENT_TYPE
 |VARCHAR(20) CHARACTER SET UTF8
-|типа оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
+|Тип оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PACKAGE_NAME
 |CHAR(63) CHARACTER SET UTF8
@@ -609,11 +609,11 @@
 
 |PARENT_STATEMENT_ID
 |BIGINT
-|идентификатор родительского оператора
+|Идентификатор родительского оператора
 
 |PARENT_STATEMENT_TYPE
 |VARCHAR(20) CHARACTER SET UTF8
-|типа родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
+|Тип родительского оператора BLOCK, FUNCTION, PROCEDURE или TRIGGER
 
 |PARENT_ROUTINE_NAME
 |CHAR(63) CHARACTER SET UTF8
@@ -625,7 +625,7 @@
 
 |COUNTER
 |BIGINT
-|количество выполнений для номера строки/столбца
+|Количество выполнений для номера строки/столбца
 
 |MIN_ELAPSED_TIME
 |BIGINT
