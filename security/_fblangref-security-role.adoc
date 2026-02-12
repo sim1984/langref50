@@ -147,7 +147,7 @@ CREATE ROLE _rolename_
 
 
 Для проверки имеет ли текущее подключение заданную системную привилегию можно воспользоваться встроенной функцией
-<<fblangref-scalarfuncs-system-privelege,`RDB$SYSTEM_PRIVILEGE()`>>.
+<<fblangref-scalarfuncs-system-privilege,`RDB$SYSTEM_PRIVILEGE()`>>.
 
 [[fblangref-security-role-createpriv]]
 === Кто может создать роль
@@ -185,7 +185,7 @@ SET SYSTEM PRIVILEGES TO USE_GBAK_UTILITY, USE_GSTAT_UTILITY, IGNORE_DB_TRIGGERS
 <<fblangref-security-grant,GRANT>>,
 <<fblangref-security-revoke,REVOKE>>,
 <<fblangref-management-setrole,SET ROLE>>,
-<<fblangref-scalarfuncs-system-privelege,RDB$SYSTEM_PRIVILEGE>>.
+<<fblangref-scalarfuncs-system-privilege,RDB$SYSTEM_PRIVILEGE>>.
 
 [[fblangref-security-roles-alter]]
 == ALTER ROLE
