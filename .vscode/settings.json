@@ -11,10 +11,14 @@
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
     "cSpell.words": [
-        "DATEADD", "DATEDIFF", "DECFLOAT",
+        "ACOSH", "ASINH",
+        "DATEADD", "DATEDIFF", "DBKEY", "DECFLOAT",
         "GDSCODE",
-		"LPAD", "PSQL", "RPAD", "TRUNC",
-		"SAVEPOINT", "SMALLINT", "SQLCODE", "SQLSTATE",
-        "VARBINARY", "VARCHAR"
+		"LOCALTIME", "LOCALTIMESTAMP", "LPAD",
+        "MAXVALUE", "MINVALUE", "NCHAR", "NTILE", "NULLIF",
+        "PSQL", "RPAD", "TOTALORDER", "TRUNC",
+		"SAVEPOINT", "SMALLINT", "SQLCODE", "SQLSTATE", "STDDEV", "SYSDBA",
+        "VARBINARY", "VARCHAR",
+        "подзапрос", "подзапроса", "подзапросов", "подзапросом", "подзапросы", "подзапросами"
     ]
 }
