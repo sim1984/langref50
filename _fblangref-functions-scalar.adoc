@@ -207,7 +207,7 @@ NEW.USER_ADR = RDB$GET_CONTEXT ('SYSTEM', 'CLIENT_ADDRESS');
 ====
 
 .См. также:
-<<fblangref-scalarfuncs-set-context,RDB$SET_CONTEXT>>.
+<<fblangref-scalarfuncs-set-context>>.
 
 [[fblangref-scalarfuncs-set-context]]
 === `RDB$SET_CONTEXT()`
@@ -312,8 +312,57 @@ COMMIT;
 ====
 
 .См. также:
-<<fblangref-scalarfuncs-get-context,`RDB$GET_CONTEXT`>>.
+<<fblangref-scalarfuncs-get-context>>, <<fblangref-scalarfuncs-reset-context>>.
 
+[[fblangref-scalarfuncs-reset-context]]
+=== `RDB$RESET_CONTEXT()`
+
+.Доступно в
+DSQL, PSQL
+(((Функция, `RDB$RESET_CONTEXT()`)))
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+RDB$RESET_CONTEXT('<namespace>')
+
+<namespace> ::= USER_SESSION | USER_TRANSACTION
+----
+
+[[fblangref-funcs-tbl-rdbresetcontext]]
+.Параметры функции `RDB$RESET_CONTEXT`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|namespace
+|Пространство имён. Может принимать значение `USER_SESSION` или `USER_TRANSACTION`.
+
+|===
+
+.Тип возвращаемого результата
+`INTEGER`
+
+Функция `RDB$RESET_CONTEXT` удаляет все переменные в заданном пространстве имён. Функция возвращает количество удалённых контекстных переменных.
+
+.Использование функции `RDB$RESET_CONTEXT`
+[example]
+====
+[source,sql]
+----
+-- удаляет все контекстные переменные из пространства имён USER_SESSION
+SELECT RDB$RESET_CONTEXT ('USER_SESSION')
+FROM RDB$DATABASE;
+
+-- в PSQL доступен такой синтаксис
+-- удаляет все контекстные переменные из пространства имён USER_TRANSACTION
+RDB$RESET_CONTEXT('USER_TRANSACTION');
+----
+====
+
+.См. также:
+<<fblangref-scalarfuncs-set-context>>.
 
 [[fblangref-functions-math]]
 == Математические функции
